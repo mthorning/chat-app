@@ -10,7 +10,10 @@ module.exports = {
     mode: 'development',
     devtool: 'inline-sourcemap',
     resolve: {
-        extensions: ['.js', '.jsx']
+        extensions: ['.js', '.jsx'],
+        alias: {
+            components: path.resolve(__dirname, 'src/components/')
+        }
     },
     module: {
         rules: [
