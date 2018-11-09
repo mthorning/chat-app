@@ -11,7 +11,11 @@ function Conversation() {
     return (
         <>
             {messages.map(message => (
-                <Message key={message.timestamp} msg={message.msg} />
+                <Message
+                    key={message.timestamp}
+                    user={message.user}
+                    msg={message.msg}
+                />
             ))}
         </>
     )

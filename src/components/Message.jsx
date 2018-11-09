@@ -2,13 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const propTypes = {
-    msg: PropTypes.string.isRequired
+    msg: PropTypes.string.isRequired,
+    user: PropTypes.string.isRequired
 }
 
-function Message({ msg }) {
+function Message({ msg, user }) {
     return (
-        <div key={msg} style={styles.msg}>
-            {msg}
+        <div style={styles.msg}>
+            {user}: {msg}
         </div>
     )
 }
