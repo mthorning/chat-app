@@ -1,11 +1,13 @@
 import React from 'react'
-import { ChatInput } from 'components'
+import { MsgInput, Conversation } from 'components'
+import { cssVariables } from 'settings'
 
 export default function App() {
     return (
         <div style={styles.app}>
             <div style={styles.chatContainer}>
-                <ChatInput />
+                <Conversation />
+                <MsgInput />
             </div>
         </div>
     )
@@ -22,9 +24,7 @@ const styles = {
     chatContainer: {
         height: '80%',
         width: '75%',
-        border: '1px solid #aaa',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between'
+        border: cssVariables.basicBorder.shorthand,
+        position: 'relative'
     }
 }

@@ -4,14 +4,17 @@
     "description": "",
     "private": true,
     "scripts": {
-        "server": "node server.js",
+        "server": "nodemon server.js",
         "dev": "webpack --config webpack.dev.config.js --watch",
         "start": "npm run parcel && npm run server"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "basic-auth": "^2.0.1",
+        "body-parser": "^1.18.3",
         "express": "^4.16.4",
+        "express-basic-auth": "^1.1.6",
         "react": "^16.7.0-alpha.0",
         "react-dom": "^16.7.0-alpha.0",
         "socket.io": "^2.1.1"

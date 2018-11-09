@@ -1,1 +1,3 @@
-export { default as ChatInput } from './ChatInput'
+export { default as MsgInput } from './MsgInput'
+export { default as Conversation } from './Conversation'
+export { default as Message } from './Message'
