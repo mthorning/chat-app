@@ -2,9 +2,11 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    entry: './src/index.js',
+    entry: {
+        chatbox: './chatbox/index.js'
+    },
     output: {
-        filename: 'main.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist')
     },
     mode: 'development',
@@ -12,8 +14,8 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx'],
         alias: {
-            components: path.resolve(__dirname, 'src/components/'),
-            settings: path.resolve(__dirname, 'src/settings/')
+            components: path.resolve(__dirname, 'chatbox/components/'),
+            settings: path.resolve(__dirname, 'chatbox/settings/')
         }
     },
     module: {
@@ -32,9 +34,8 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            hash: true,
             title: 'Esmae Chat App',
-            filename: './index.html',
+            filename: 'index.html',
             template: 'index.html'
         })
     ]
