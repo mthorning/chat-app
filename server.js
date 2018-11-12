@@ -14,8 +14,8 @@ const client = redis.createClient()
 
 client.on('connect', () => {
     console.log('Redis Connected')
-    client.set('matt', 'password')
-    client.set('esmaesquish', 'coco&bonobo')
+    client.set('matt', 'pass')
+    client.set('esmae', 'pass')
 })
 
 client.on('error', err => console.error('Error connecting to DB', err))

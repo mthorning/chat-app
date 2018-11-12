@@ -1,18 +1,25 @@
-import React, { useEffect, createContext } from 'react'
+import React, { useEffect, createContext, useState } from 'react'
 import { MsgInput, Conversation } from 'components'
 import { cssVariables } from 'settings'
 
 const UserContext = createContext('')
 
 export default function App() {
+    const [name, setName] = useState('')
+
     useEffect(() => {
         fetch('/whoami')
-            .then(res => console.log(res))
+            .then(res => res.json().then(val => setName(val.user)))
             .catch(err => console.error(err))
-    })
+    }, [])
+
     return (
         <UserContext.Provider value="matt">
             <div style={styles.app}>
+                <a style={styles.logout} href="/logout">
+                    Logout
+                </a>
+                <h3 style={styles.welcome}>Welcome, {name}</h3>
                 <div style={styles.chatContainer}>
                     <Conversation />
                     <MsgInput />
@@ -35,5 +42,15 @@ const styles = {
         width: '75%',
         border: cssVariables.basicBorder.shorthand,
         position: 'relative'
+    },
+    logout: {
+        position: 'absolute',
+        top: 10,
+        right: 10
+    },
+    welcome: {
+        position: 'absolute',
+        top: 10,
+        left: 10
     }
 }
