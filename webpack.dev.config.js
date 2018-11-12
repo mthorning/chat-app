@@ -1,9 +1,10 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
     entry: {
-        chatbox: './chatbox/index.js'
+        'chatbox': './chatbox/index.js'
     },
     output: {
         filename: '[name].js',
@@ -35,8 +36,9 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Esmae Chat App',
-            filename: 'index.html',
+            filename: 'chat.html',
             template: 'index.html'
-        })
+        }),
+        new CopyWebpackPlugin([{ from: 'login/login.html', to: '.' }])
     ]
 }

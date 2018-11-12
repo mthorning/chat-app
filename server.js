@@ -3,85 +3,123 @@ const express = require('express')
 const redis = require('redis')
 const session = require('express-session')
 const redisStore = require('connect-redis')(session)
-const client = redis.createClient()
 const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const bodyParser = require('body-parser')
+const uuid = require('uuid/v4')
+const seedDB = require('./server_modules/seedDB')
+const passport = require('passport')
 
-const users = require('./server_modules/users')
+const LocalStrategy = require('passport-local').Strategy
+
+const client = redis.createClient()
+
 client.on('connect', () => {
-    console.log('Redis connected, seeding users...')
-    client.hmset('users', users)
-    client.hgetall('users', (err, hash) => {
-        if (err) console.error(err)
-        console.log(hash)
+    seedDB(client)
+})
+
+// configure passport.js to use the local strategy
+passport.use(
+    new LocalStrategy(
+        { usernameField: 'username' },
+        (username, password, done) => {
+            console.log('checking password from %s', username)
+            console.log(client.hexists(username))
+            if (client.hexists(username)) {
+                client.hget('users', username, (err, pass) => {
+                    console.log('user exists')
+                    if (err) console.error(err)
+
+                    if (pass === password) {
+                        console.log('Password correct')
+                        return done(null, username)
+                    } else {
+                        console.log('Password (%s) incorrect', password)
+                        return done(null, false, {
+                            message: 'Incorrect username.'
+                        })
+                    }
+                })
+            }
+        }
+    )
+)
+
+// tell passport how to serialize the user
+passport.serializeUser((user, done) => {
+    console.log('Inside serializeUser callback, user = ', user)
+    done(null, user)
+})
+
+passport.deserializeUser(function(user, done) {
+    client.hget('users', user, (err, foundUser) => {
+        if (err) return done(null, err)
+        done(null, foundUser)
     })
 })
+
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 
 app.use(
     session({
         secret: 'esmaesqishpants',
+        genid: req => {
+            console.log(
+                'Inside the session middleware, session ID',
+                req.sessionID
+            )
+            return uuid() // use UUIDs for session IDs
+        },
         // create new redis store.
         store: new redisStore({
             host: 'localhost',
             port: 6379,
-            client: client,
+            client,
             ttl: 260
         }),
-        saveUninitialized: false,
-        resave: false
+        resave: false,
+        saveUninitialized: true
     })
 )
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
 
-// app.set('views', __dirname + '/views');
-// app.engine('html', require('ejs').renderFile);
+app.use(passport.initialize())
+app.use(passport.session())
 
-app.post('/attemptLogin', function(req, res) {
-    console.log('%s attempting login ', req.body.username)
-    if (client.hexists(req.body.username)) {
-        client.hget('users', req.body.username, (error, pass) => {
-            console.log(
-                'checking password "%s" against "%s"',
-                req.body.password,
-                pass
-            )
-            if (pass === req.body.password) {
-                // when user login set the key to redis.
-                req.session.key = req.body.username
-                console.log('key set %s', req.session.key)
-            }
-        })
-    } else {
-        console.log('key not set ', req.body.username)
-        console.log(client.hexists(req.body.username))
-        console.log('pass: ', client.hget('users', req.body.username))
-        res.status(403).body('Permission Denied')
-    }
-})
-
-app.get('/logout', function(req, res) {
-    req.session.destroy(function(err) {
-        if (err) {
-            console.log(err)
-        } else {
-            res.redirect('/')
-        }
-    })
-})
-
-app.use('/chatbox', express.static(path.resolve(__dirname, 'dist', 'chatbox')))
-app.use('/login', express.static(path.resolve(__dirname, 'login')))
-
-app.use('/', function(req, res) {
-    if (req.session && req.session.key) {
+app.get('/', (req, res) => {
+    console.log(`1 / 7. User authenticated? ${req.isAuthenticated()}`)
+    if (req.isAuthenticated()) {
+        console.log('8. Authenticated, send app')
         res.redirect('/chatbox')
     } else {
+        console.log('2. Not authenticated, sending login page')
         res.redirect('/login')
     }
 })
+
+app.post(
+    '/login',
+    passport.authenticate('local', {
+        successRedirect: '/chatbox',
+        failureRedirect: '/login'
+    })
+)
+
+app.get('/logout', function(req, res) {
+    console.log('logging out ', req.session)
+    req.logout()
+    res.redirect('/')
+})
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'login', 'login.html'))
+})
+
+app.get('/chatbox', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'dist', 'chat.html'))
+})
+app.use('/', express.static(path.resolve(__dirname, 'dist')))
 
 io.on('connection', socket => {
     socket.on('chat message', msg => {

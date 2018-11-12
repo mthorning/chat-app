@@ -5,6 +5,7 @@ import { cssVariables } from 'settings'
 export default function App() {
     return (
         <div style={styles.app}>
+            <a href="/logout">Logout</a>
             <div style={styles.chatContainer}>
                 <Conversation />
                 <MsgInput />
