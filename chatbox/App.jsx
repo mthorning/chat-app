@@ -1,22 +1,20 @@
 import React, { useEffect, createContext, useState } from 'react'
-import { MsgInput, Conversation, SessionBar } from 'components'
+import { MsgInput, Conversation, SessionBar, UserContext } from 'components'
 import { cssVariables } from 'settings'
 
-const UserContext = createContext('')
-
 function App() {
-    const [name, setName] = useState('')
+    const [whoami, setWhoami] = useState({})
 
-    useEffect(() => {
-        fetch('/whoami')
-            .then(res => res.json().then(val => setName(val.user)))
-            .catch(err => console.error(err))
+    useEffect(async () => {
+        const res = await fetch('/whoami')
+        const whoiam = await res.json()
+        setWhoami(whoiam)
     }, [])
 
     return (
-        <UserContext.Provider value="matt">
+        <UserContext.Provider value={whoami}>
             <div style={styles.app}>
-                <SessionBar name={name} />
+                <SessionBar />
                 <div style={styles.chatContainer}>
                     <Conversation />
                     <MsgInput />

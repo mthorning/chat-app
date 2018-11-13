@@ -103,14 +103,21 @@ app.get('/whoami', (req, res) => {
     client.hgetall(username, (err, userData) => {
         if (err) res.status(500).send(err)
 
-        if (userData) res.status(200).send({ userData })
+        if (userData) res.status(200).send(userData)
     })
 })
 
 io.on('connection', socket => {
-    socket.on('chat message', msg => {
-        console.log('received ', msg)
-        io.emit('chat message', msg)
+    socket.on('chat message', packet => {
+        console.log('Received %o', packet)
+
+        const broadcastPacket = {
+            message: packet.message,
+            displayName: packet.sender.displayName,
+            timestamp: packet.timestamp
+        }
+        io.emit('chat message', broadcastPacket)
+        console.log('Sent %o', broadcastPacket)
     })
     socket.on('disconnect', () => console.log('Socket disconnected'))
 })

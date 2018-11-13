@@ -1,20 +1,21 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState } from 'react'
 import io from 'socket.io-client'
 import { Message } from 'components'
 
 function Conversation() {
-    const [messages, setMessages] = useState([])
+    const [packets, setPackets] = useState([])
     const socket = io()
-    socket.on('chat message', msg => {
-        setMessages([...messages, msg])
+    socket.on('chat message', packet => {
+        console.log(packet)
+        setPackets([...packets, packet])
     })
     return (
         <>
-            {messages.map(message => (
+            {packets.map(packet => (
                 <Message
-                    key={message.timestamp}
-                    user={message.user}
-                    msg={message.msg}
+                    key={packet.timestamp}
+                    sender={packet.displayName}
+                    message={packet.message}
                 />
             ))}
         </>

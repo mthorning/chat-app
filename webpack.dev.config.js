@@ -3,9 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-    entry: {
-        'chatbox': './chatbox/index.js'
-    },
+    entry: ['@babel/polyfill', './chatbox/index.js'],
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, 'dist')

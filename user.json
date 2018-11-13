@@ -2,13 +2,15 @@
     "matt": {
         "password": "pass",
         "data": {
-            "displayName": "Daddy"
+            "displayName": "Daddy",
+            "username": "matt"
         }
     },
     "esmae": {
         "password": "pass",
         "data": {
-            "displayName": "Squishy"
+            "displayName": "Squishy",
+            "username": "esmae"
         }
     }
 }

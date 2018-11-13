@@ -1,17 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import io from 'socket.io-client'
 import { cssVariables } from 'settings'
+import { UserContext } from 'components'
 
 function ChatInput() {
     const socket = io()
     const [msg, setMsg] = useState('')
+    const { username, displayName } = useContext(UserContext)
 
     function inputHandler(e) {
         if (e.which === 13) {
             e.preventDefault()
-            const msg = e.target.value
+            const message = e.target.value
             const timestamp = Date.now()
-            socket.emit('chat message', { msg, timestamp })
+            socket.emit('chat message', {
+                message,
+                timestamp,
+                sender: {
+                    username,
+                    displayName
+                }
+            })
             setMsg('')
         }
     }

@@ -1,16 +1,11 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, useContext } from 'react'
 import { MdExitToApp } from 'react-icons/md'
 import { cssVariables } from 'settings'
-
-const propTypes = {
-    name: PropTypes.string.isRequired
-}
+import { UserContext } from 'components'
 
 function SessionBar() {
-    const defaultColor = '#fa09cf6b'
-    const hoverColor = '#fa09cf'
     const [color, setColor] = useState(cssVariables.toolsDefaultColor)
+    const { displayName } = useContext(UserContext)
 
     function hover() {
         setColor(cssVariables.toolsHighlightColor)
@@ -21,31 +16,34 @@ function SessionBar() {
     }
 
     return (
-        <a style={styles.logout} href="/logout">
-            <MdExitToApp
-                style={{ color }}
-                onMouseLeave={unhover}
-                onMouseEnter={hover}
-            />
-        </a>
+        <div style={styles.wrapper}>
+            <h4 style={styles.welcome}>{displayName}</h4>
+            <a style={styles.logout} href="/logout">
+                <MdExitToApp
+                    style={{ color }}
+                    onMouseLeave={unhover}
+                    onMouseEnter={hover}
+                />
+            </a>
+        </div>
     )
 }
 
-SessionBar.propTypes = propTypes
 export default SessionBar
 
 const styles = {
-    logout: {
+    wrapper: {
         position: 'absolute',
         top: 10,
         right: 10,
-        display: 'block',
+        display: 'inline-flex'
+    },
+    logout: {
         fontSize: '30px'
     },
     welcome: {
-        position: 'absolute',
-        top: 10,
-        left: 10,
-        margin: 0
+        margin: 0,
+        fontSize: '23px',
+        color: cssVariables.toolsDefaultColor
     }
 }
