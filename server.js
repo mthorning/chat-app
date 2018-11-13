@@ -13,16 +13,27 @@ const LocalStrategy = require('passport-local').Strategy
 const client = redis.createClient()
 
 client.on('connect', () => {
+    const users = require('./user.json')
     console.log('Redis Connected')
-    client.set('matt', 'pass')
-    client.set('esmae', 'pass')
+
+    for (let user in users) {
+        client.hset('passwords', user, users[user].password, check)
+
+        for (let attr in users[user].data) {
+            client.hset(user, attr, users[user].data[attr], check)
+        }
+    }
+
+    function check(err) {
+        if (err) console.error(err)
+    }
 })
 
 client.on('error', err => console.error('Error connecting to DB', err))
 
 passport.use(
     new LocalStrategy((username, password, done) => {
-        const userFound = client.get(username, (err, pass) => {
+        const userFound = client.hget('passwords', username, (err, pass) => {
             if (err) return done(err)
 
             if (!pass) return done(null, false)
@@ -38,7 +49,7 @@ passport.use(
 passport.serializeUser((user, done) => done(null, user))
 
 passport.deserializeUser((user, done) => {
-    client.get(user, (err, foundUser) => {
+    client.hget('passwords', user, (err, foundUser) => {
         if (err) return done(null, err)
         done(null, foundUser)
     })
@@ -86,15 +97,20 @@ app.get('/logout', (req, res) => {
 })
 
 app.get('/whoami', (req, res) => {
-    const user =
+    const username =
         req.session && req.session.passport && req.session.passport.user
-    res.status(200).send({ user })
+
+    client.hgetall(username, (err, userData) => {
+        if (err) res.status(500).send(err)
+
+        if (userData) res.status(200).send({ userData })
+    })
 })
 
 io.on('connection', socket => {
     socket.on('chat message', msg => {
-        console.log('received ', user)
-        io.emit('chat message', { ...msg, user })
+        console.log('received ', msg)
+        io.emit('chat message', msg)
     })
     socket.on('disconnect', () => console.log('Socket disconnected'))
 })

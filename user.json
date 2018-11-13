@@ -1,0 +1,14 @@
+{
+    "matt": {
+        "password": "pass",
+        "data": {
+            "displayName": "Daddy"
+        }
+    },
+    "esmae": {
+        "password": "pass",
+        "data": {
+            "displayName": "Squishy"
+        }
+    }
+}
