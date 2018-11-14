@@ -1,4 +1,5 @@
-import React, { useEffect, createContext, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+
 import { MsgInput, Conversation, SessionBar, UserContext } from 'components'
 import { cssVariables } from 'settings'
 
@@ -38,6 +39,8 @@ const styles = {
         height: '80%',
         width: '75%',
         border: cssVariables.basicBorder.shorthand,
-        position: 'relative'
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: '400px'
     }
 }

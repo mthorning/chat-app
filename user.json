@@ -12,5 +12,12 @@
             "displayName": "Squishy",
             "username": "esmae"
         }
+    },
+    "taya": {
+        "password": "pass",
+        "data": {
+            "displayName": "Mummy",
+            "username": "taya"
+        }
     }
 }

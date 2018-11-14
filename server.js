@@ -1,16 +1,18 @@
-const path = require('path')
 const express = require('express')
+const app = express()
+const http = require('http').Server(app)
+const path = require('path')
 const redis = require('redis')
 const session = require('express-session')
 const redisStore = require('connect-redis')(session)
-const app = express()
-const server = app.listen(3000)
-const io = require('socket.io').listen(server)
+const io = require('socket.io')(http)
 const bodyParser = require('body-parser')
 const uuid = require('uuid/v4')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const client = redis.createClient()
+
+const server = http.listen(3000, () => console.log('Listening on P3000'))
 
 client.on('connect', () => {
     const users = require('./user.json')
@@ -109,15 +111,9 @@ app.get('/whoami', (req, res) => {
 
 io.on('connection', socket => {
     socket.on('chat message', packet => {
-        console.log('Received %o', packet)
-
-        const broadcastPacket = {
-            message: packet.message,
-            displayName: packet.sender.displayName,
-            timestamp: packet.timestamp
-        }
-        io.emit('chat message', broadcastPacket)
-        console.log('Sent %o', broadcastPacket)
+        io.emit('chat message', packet)
+        console.log('Sent %o', packet)
     })
+
     socket.on('disconnect', () => console.log('Socket disconnected'))
 })

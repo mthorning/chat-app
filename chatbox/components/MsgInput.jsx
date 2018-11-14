@@ -1,10 +1,11 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import io from 'socket.io-client'
 import { cssVariables } from 'settings'
 import { UserContext } from 'components'
 
-function ChatInput() {
-    const socket = io()
+const socket = io()
+
+function MsgInput() {
     const [msg, setMsg] = useState('')
     const { username, displayName } = useContext(UserContext)
 
@@ -16,10 +17,8 @@ function ChatInput() {
             socket.emit('chat message', {
                 message,
                 timestamp,
-                sender: {
-                    username,
-                    displayName
-                }
+                username,
+                displayName
             })
             setMsg('')
         }
@@ -40,12 +39,10 @@ function ChatInput() {
     )
 }
 
-export default ChatInput
+export default MsgInput
+
 const styles = {
     input: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
         borderTop: cssVariables.basicBorder.shorthand,
         borderBottom: 'none',
         borderLeft: 'none',
