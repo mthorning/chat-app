@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import 'assets/main.scss'
+import { UserContext, SocketContext } from 'contexts'
+import { MsgInput, Conversation, SessionBar, Online } from 'components'
+import io from 'socket.io-client'
 
-import { MsgInput, Conversation, SessionBar, UserContext } from 'components'
-import { cssVariables } from 'settings'
+const socket = io()
 
 function App() {
     const [whoami, setWhoami] = useState({})
@@ -10,37 +13,35 @@ function App() {
         const res = await fetch('/whoami')
         const whoiam = await res.json()
         setWhoami(whoiam)
+        socket.emit('user connected', {
+            timestamp: Date.now(),
+            displayName: whoiam.displayName,
+            username: whoiam.username
+        })
+
+        return () => {
+            socket.emit('user disconnected', {
+                timestamp: Date.now(),
+                username,
+                displayName
+            })
+        }
     }, [])
 
     return (
         <UserContext.Provider value={whoami}>
-            <div style={styles.app}>
-                <SessionBar />
-                <div style={styles.chatContainer}>
-                    <Conversation />
-                    <MsgInput />
-                </div>
+            <div className="app-area">
+                <SocketContext.Provider value={socket}>
+                    <Online />
+                    <SessionBar />
+                    <div className="chat-area">
+                        <Conversation />
+                        <MsgInput />
+                    </div>
+                </SocketContext.Provider>
             </div>
         </UserContext.Provider>
     )
 }
 
 export default App
-
-const styles = {
-    app: {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    chatContainer: {
-        height: '80%',
-        width: '75%',
-        border: cssVariables.basicBorder.shorthand,
-        display: 'flex',
-        flexDirection: 'column',
-        maxWidth: '400px'
-    }
-}

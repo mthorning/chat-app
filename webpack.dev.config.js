@@ -14,7 +14,8 @@ module.exports = {
         extensions: ['.js', '.jsx'],
         alias: {
             components: path.resolve(__dirname, 'chatbox/components/'),
-            settings: path.resolve(__dirname, 'chatbox/settings/')
+            assets: path.resolve(__dirname, 'assets/'),
+            contexts: path.resolve(__dirname, 'chatbox/contexts/')
         }
     },
     module: {
@@ -28,6 +29,10 @@ module.exports = {
                         presets: ['@babel/preset-env']
                     }
                 }
+            },
+            {
+                test: /\.scss$/,
+                use: ['style-loader', 'css-loader', 'sass-loader']
             }
         ]
     },
@@ -36,7 +41,6 @@ module.exports = {
             title: 'Esmae Chat App',
             filename: 'chat.html',
             template: 'index.html'
-        }),
-        new CopyWebpackPlugin([{ from: 'login/login.html', to: '.' }])
+        })
     ]
 }

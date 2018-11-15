@@ -1,13 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react'
-import io from 'socket.io-client'
-import { cssVariables } from 'settings'
-import { UserContext } from 'components'
-
-const socket = io()
+import React, { useState, useContext } from 'react'
+import { UserContext, SocketContext } from 'contexts'
 
 function MsgInput() {
     const [msg, setMsg] = useState('')
     const { username, displayName } = useContext(UserContext)
+    const socket = useContext(SocketContext)
 
     function inputHandler(e) {
         if (e.which === 13) {
@@ -29,28 +26,15 @@ function MsgInput() {
     }
 
     return (
-        <textarea
-            autoFocus
-            value={msg}
-            style={styles.input}
-            onChange={changeHandler}
-            onKeyPress={inputHandler}
-        />
+        <div className="msg-input-component">
+            <textarea
+                autoFocus
+                value={msg}
+                onChange={changeHandler}
+                onKeyPress={inputHandler}
+            />
+        </div>
     )
 }
 
 export default MsgInput
-
-const styles = {
-    input: {
-        borderTop: cssVariables.basicBorder.shorthand,
-        borderBottom: 'none',
-        borderLeft: 'none',
-        borderRight: 'none',
-        width: `calc(100% - ${cssVariables.basicBorder.size + 5}px)`,
-        height: '10vh',
-        verticalAlign: 'text-top',
-        padding: '3px',
-        resize: 'none'
-    }
-}

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { UserContext } from 'components'
+import { UserContext } from 'contexts'
 import PropTypes from 'prop-types'
 
 const propTypes = {
@@ -16,19 +16,10 @@ function Message(props) {
             ? { alignSelf: 'flex-end', borderRadius: '10px 0 10px 10px' }
             : { alignSelf: 'flex-start', borderRadius: '0 10px 10px 10px' }
     return (
-        <div style={Object.assign({}, styles.msg, align)}>
+        <div className="message" style={align}>
             {displayName}: {message}
         </div>
     )
-}
-
-const styles = {
-    msg: {
-        width: '50%',
-        border: '1px solid #aaa',
-        padding: '10px',
-        margin: '10px 10px'
-    }
 }
 
 Message.propTypes = propTypes

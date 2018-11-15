@@ -1,8 +1,6 @@
-import React, { useReducer, useEffect } from 'react'
-import io from 'socket.io-client'
+import React, { useReducer, useEffect, useContext } from 'react'
+import { SocketContext } from 'contexts'
 import { Message } from 'components'
-
-const socket = io()
 
 function Conversation() {
     function reducer(state, action) {
@@ -16,6 +14,8 @@ function Conversation() {
 
     const [state, dispatch] = useReducer(reducer, { packets: [] })
 
+    const socket = useContext(SocketContext)
+
     useEffect(() => {
         socket.on('chat message', packet => {
             dispatch({ type: 'add', payload: packet })
@@ -28,7 +28,7 @@ function Conversation() {
     })
 
     return (
-        <div ref={el => (convoWrapper = el)} style={styles.wrapper}>
+        <div className="conversation-component" ref={el => (convoWrapper = el)}>
             {state.packets.map(packet => (
                 <Message key={packet.timestamp} {...packet} />
             ))}
@@ -37,14 +37,3 @@ function Conversation() {
 }
 
 export default Conversation
-
-const styles = {
-    wrapper: {
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'start',
-        overflow: 'auto'
-    }
-}

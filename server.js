@@ -110,10 +110,16 @@ app.get('/whoami', (req, res) => {
 })
 
 io.on('connection', socket => {
+    let username
+    socket.on('user connected', packet => {
+        username = packet.username
+        io.emit('user connected', packet)
+    })
     socket.on('chat message', packet => {
         io.emit('chat message', packet)
-        console.log('Sent %o', packet)
     })
-
-    socket.on('disconnect', () => console.log('Socket disconnected'))
+    socket.on('disconnect', () => {
+        io.emit('user disconnected', { username })
+        console.log('%s disconnected', username)
+    })
 })
