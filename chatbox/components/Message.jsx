@@ -11,13 +11,17 @@ const propTypes = {
 function Message(props) {
     const { message, displayName, username } = props
     const { username: whoiam } = useContext(UserContext)
-    const align =
-        whoiam === username
-            ? { alignSelf: 'flex-end', borderRadius: '10px 0 10px 10px' }
-            : { alignSelf: 'flex-start', borderRadius: '0 10px 10px 10px' }
+    const isSelf = whoiam === username
+    const classes = `message ${isSelf ? 'sender-msg-bg' : 'own-msg-bg'}`
+
+    const align = isSelf
+        ? { alignSelf: 'flex-end', borderRadius: '10px 0 10px 10px' }
+        : { alignSelf: 'flex-start', borderRadius: '0 10px 10px 10px' }
+
     return (
-        <div className="message" style={align}>
-            {displayName}: {message}
+        <div className={classes} style={align}>
+            {!isSelf && <span>{displayName}: </span>}
+            <span>{message}</span>
         </div>
     )
 }

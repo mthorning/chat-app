@@ -31,9 +31,9 @@ function App() {
     return (
         <UserContext.Provider value={whoami}>
             <div className="app-area">
+                <SessionBar />
                 <SocketContext.Provider value={socket}>
                     <Online />
-                    <SessionBar />
                     <div className="chat-area">
                         <Conversation />
                         <MsgInput />

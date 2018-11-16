@@ -1,21 +1,41 @@
-$basic-border: 1px solid #aaa;
-$toolsDefaultColor: rgba(250, 9, 207, 0.42);
-$toolsHighlightColor: #fa09cf;
+$tools-default-color: rgba(250, 9, 207, 0.42);
+$tools-highlight-color: #fa09cf;
 $standard-padding: 10px;
+$message-area-bg-color: rgba(255, 255, 255, 0.8);
+$sender-message-color: rgb(255, 248, 220);
+$own-message-color: rgb(255, 192, 203);
+$br: 10px;
+
+body {
+    margin: 0;
+}
+
+#root {
+    font-family: 'Source Sans Pro', sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    background: url('./images/background.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
 
 .app-area {
-    height: 100vh;
-    width: 100vw;
-    max-width: 700px;
+    max-width: 900px;
+    padding: 10px 0;
+    height: 100%;
+    width: 90%;
     margin: auto;
     display: grid;
     grid-template-columns: 2fr 5fr 5fr 2fr;
     grid-template-rows: 1fr 10fr 10fr 1fr;
     grid-template-areas:
-        '......   ....     ....   session'
-        'online   chat     chat   ......'
-        'online   chat     chat   ......'
-        '.......  ....     ....   .....';
+        '......   ....   ....   session'
+        'online   chat   chat   ......'
+        'online   chat   chat   ......'
+        '.......  ....   ....   ......';
 }
 
 .online-component {
@@ -23,6 +43,9 @@ $standard-padding: 10px;
 }
 
 .session-bar-component {
+    position: absolute;
+    top: 10px;
+    right: 30px;
     grid-area: session;
     text-align: right;
     display: flex;
@@ -31,56 +54,75 @@ $standard-padding: 10px;
         display: inline;
         margin: 0;
         font-size: 23px;
-        color: $toolsDefaultColor;
+        color: $tools-default-color;
     }
 
     .logout > svg {
         font-size: 30px;
-        color: $toolsDefaultColor;
+        color: $tools-default-color;
     }
 
     .logout > svg:hover {
-        color: $toolsHighlightColor;
+        color: $tools-highlight-color;
     }
 }
 
 .chat-area {
+    border-radius: $br;
+    box-shadow: 3px 3px 5px #777;
     grid-area: chat;
-    border: $basic-border;
     display: flex;
     flex-direction: column;
 }
 
+.conversation-component,
+.msg-input-component {
+    background-color: $message-area-bg-color;
+}
+
 .conversation-component {
-    height: 100%;
+    border-radius: $br $br 0 0;
     width: 100%;
     display: flex;
+    flex: 5;
     flex-direction: column;
     align-items: start;
     overflow: auto;
 
     .message {
+        border: 1px solid #aaa;
         width: 50%;
-        border: $basic-border;
         padding: $standard-padding;
         margin: 10px 10px;
     }
 }
 
 .msg-input-component {
-    border-top: $basic-border;
-    height: 100px;
-    padding: 4px;
+    border-radius: 0 0 $br $br;
+    flex: 1 1;
+    padding: 0;
 
     textarea {
+        font-size: 16px;
+        font-family: 'Source Sans Pro', sans-serif;
+        padding: 15px;
+        background-color: rgba(100, 100, 100, 0.1);
         resize: none;
         margin: auto;
         vertical-align: text-top;
-        height: 95%;
-        width: 95%;
+        height: calc(100% - 30px);
+        width: calc(100% - 30px);
         border: none;
     }
     textarea:focus {
         outline: none;
     }
+}
+
+.sender-msg-bg {
+    background-color: $sender-message-color;
+}
+
+.own-msg-bg {
+    background-color: $own-message-color;
 }
