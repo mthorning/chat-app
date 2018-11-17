@@ -18,14 +18,6 @@ function App() {
             displayName: whoiam.displayName,
             username: whoiam.username
         })
-
-        return () => {
-            socket.emit('user disconnected', {
-                timestamp: Date.now(),
-                username,
-                displayName
-            })
-        }
     }, [])
 
     return (

@@ -14,6 +14,10 @@ const client = redis.createClient()
 
 const server = http.listen(3000, () => console.log('Listening on P3000'))
 
+function check(err) {
+    if (err) console.error(err)
+}
+
 client.on('connect', () => {
     const users = require('./user.json')
     console.log('Redis Connected')
@@ -25,10 +29,7 @@ client.on('connect', () => {
             client.hset(user, attr, users[user].data[attr], check)
         }
     }
-
-    function check(err) {
-        if (err) console.error(err)
-    }
+    client.del('onlineUsers')
 })
 
 client.on('error', err => console.error('Error connecting to DB', err))
@@ -111,15 +112,52 @@ app.get('/whoami', (req, res) => {
 
 io.on('connection', socket => {
     let username
+
     socket.on('user connected', packet => {
         username = packet.username
-        io.emit('user connected', packet)
+        console.log('%s has connected', username)
+        client.sadd('onlineUsers', username, () => sendOnlineUsers())
     })
+
     socket.on('chat message', packet => {
-        io.emit('chat message', packet)
+        let responsePacket = { ...packet }
+        if (packet.username === username) {
+            responsePacket.type = 'own'
+        } else {
+            responsePacket.type = 'sender'
+        }
+        io.emit('chat message', responsePacket)
     })
+
     socket.on('disconnect', () => {
-        io.emit('user disconnected', { username })
-        console.log('%s disconnected', username)
+        client.srem('onlineUsers', username, err => {
+            check(err)
+            sendOnlineUsers()
+        })
     })
 })
+
+function sendOnlineUsers() {
+    client.smembers('onlineUsers', (err, list) => {
+        check(err)
+        console.log('DB returned ', list)
+        const userDisplayNames = []
+        list.forEach(onlineUser => {
+            userDisplayNames.push(
+                new Promise((resolve, reject) => {
+                    client.hget(onlineUser, 'displayName', (err, name) => {
+                        if (err) reject(err)
+                        resolve(name)
+                    })
+                })
+            )
+        })
+        Promise.all(userDisplayNames).then(
+            res => {
+                console.log('online users = ', res)
+                io.emit('online users', res)
+            },
+            err => check(err)
+        )
+    })
+}

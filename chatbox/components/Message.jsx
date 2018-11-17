@@ -1,5 +1,4 @@
-import React, { useContext } from 'react'
-import { UserContext } from 'contexts'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 const propTypes = {
@@ -9,21 +8,17 @@ const propTypes = {
 }
 
 function Message(props) {
-    const { message, displayName, username } = props
-    const { username: whoiam } = useContext(UserContext)
-    const isSelf = whoiam === username
-    const classes = `message ${isSelf ? 'sender-msg-bg' : 'own-msg-bg'}`
+    const { message, displayName, type } = props
 
-    const align = isSelf
-        ? { alignSelf: 'flex-end', borderRadius: '10px 0 10px 10px' }
-        : { alignSelf: 'flex-start', borderRadius: '0 10px 10px 10px' }
-
-    return (
-        <div className={classes} style={align}>
-            {!isSelf && <span>{displayName}: </span>}
-            <span>{message}</span>
-        </div>
-    )
+    if (type === 'own') {
+        return <div className="message own-msg">{message}</div>
+    } else {
+        return (
+            <div className="message sender-msg">
+                {displayName}: {message}
+            </div>
+        )
+    }
 }
 
 Message.propTypes = propTypes

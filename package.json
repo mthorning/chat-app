@@ -4,7 +4,7 @@
     "description": "",
     "private": true,
     "scripts": {
-        "server": "nodemon server.js",
+        "server": "nodemon server",
         "dev": "webpack --config webpack.dev.config.js --watch",
         "start": "npm run parcel && npm run server"
     },

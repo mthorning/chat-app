@@ -3,11 +3,51 @@
   <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <style>
+      .login-form {
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .login-form .container {
+          box-shadow: 3px 3px 5px #777;
+          border: 1px solid #ccc;
+          border-radius: 15px;
+          width: 300px;
+          padding: 15px;
+      }
+      .login-form .container form {
+          display: flex;
+          flex-direction: column;
+      }
+
+      .login-form .container form input {
+        margin: 10px;
+        padding: 8px 4px;
+      }
+
+      .login-form .container form input:focus {
+        outline: none;
+      }
+
+
+      .login-form .container form .submit {
+        background-color:
+      }
+
+    </style>
   </head>
   <body>
-    <form method="post" action="/login">
-      <input autofocus type="text" name="username" />
-      <input type="password" name="password" />
-      <input type="submit" />
-    </form>
+   <div class="login-form" >
+     <div class="container" >
+     <form method="post" action="/login">
+        <input autofocus type="text"  autocomplete="username" name="username" />
+        <input type="password" autocomplete="current-password" name="password" />
+        <input class="submit" type="submit" />
+      </form>
+      </div>
+   </div>
 </html>

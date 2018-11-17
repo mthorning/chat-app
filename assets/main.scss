@@ -119,10 +119,14 @@ body {
     }
 }
 
-.sender-msg-bg {
+.sender-msg {
+    align-self: flex-start;
+    border-radius: 0 $br $br $br;
     background-color: $sender-message-color;
 }
 
-.own-msg-bg {
+.own-msg {
+    align-self: flex-end;
+    border-radius: $br 0 $br $br;
     background-color: $own-message-color;
 }

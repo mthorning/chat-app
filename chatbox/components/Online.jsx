@@ -1,45 +1,30 @@
 import React, { useEffect, useReducer, useContext } from 'react'
-import { UserContext, SocketContext } from 'contexts'
+import { SocketContext } from 'contexts'
 
 function Online() {
     function reducer(state, action) {
         switch (action.type) {
-            case 'online':
-                const online = {
-                    packets: [...new Set([...state.packets, action.payload])]
-                }
-                return online
-            case 'offline':
-                const offline = {
-                    packets: state.packets.filter(
-                        packet => packet.username !== action.payload.username
-                    )
-                }
-                console.log(offline)
-                return offline
+            case 'update':
+                return { onlineUsers: action.payload }
             default:
                 return state
         }
     }
-    const { username, displayName } = useContext(UserContext)
-    const [state, dispatch] = useReducer(reducer, { packets: [] })
+    const [state, dispatch] = useReducer(reducer, { onlineUsers: [] })
     const socket = useContext(SocketContext)
 
     useEffect(() => {
-        socket.on('user connected', packet => {
-            dispatch({ type: 'online', payload: packet })
-        })
-
-        socket.on('user disconnected', packet => {
-            dispatch({ type: 'offline', payload: packet })
+        socket.on('online users', onlineUsers => {
+            dispatch({ type: 'update', payload: onlineUsers })
         })
     }, [])
 
+    console.log('users: ', state.onlineUsers)
     return (
         <div className="online-component">
             <ul>
-                {state.packets.map(packet => (
-                    <li key={packet.timestamp}>{packet.displayName}</li>
+                {state.onlineUsers.map(user => (
+                    <li key={user}>{user}</li>
                 ))}
             </ul>
         </div>
