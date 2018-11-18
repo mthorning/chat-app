@@ -1,11 +1,16 @@
 import React, { useEffect, useReducer, useContext } from 'react'
-import { SocketContext } from 'contexts'
+import { SocketContext, UserContext } from 'contexts'
 
 function Online() {
+    const { displayName } = useContext(UserContext)
     function reducer(state, action) {
         switch (action.type) {
             case 'update':
-                return { onlineUsers: action.payload }
+                return {
+                    onlineUsers: action.payload.filter(
+                        usr => usr !== displayName
+                    )
+                }
             default:
                 return state
         }

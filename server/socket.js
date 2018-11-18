@@ -7,7 +7,6 @@ module.exports = (client, io) => socket => {
 
     socket.on('user connected', packet => {
         username = packet.username
-        console.log('%s has connected', username)
         client.sadd('onlineUsers', username, () => sendOnlineUsers())
     })
 
@@ -31,7 +30,6 @@ module.exports = (client, io) => socket => {
     function sendOnlineUsers() {
         client.smembers('onlineUsers', (err, list) => {
             check(err)
-            console.log('DB returned ', list)
             const userDisplayNames = []
             list.forEach(onlineUser => {
                 userDisplayNames.push(
@@ -45,7 +43,6 @@ module.exports = (client, io) => socket => {
             })
             Promise.all(userDisplayNames).then(
                 res => {
-                    console.log('online users = ', res)
                     io.emit('online users', res)
                 },
                 err => check(err)

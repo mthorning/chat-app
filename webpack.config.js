@@ -1,22 +1,47 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-// const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const WebpackMd5Hash = require('webpack-md5-hash')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 
+const prod = process.env.PRODUCTION
+console.log(`Building in ${prod ? 'production' : 'development'} mode`)
+const env = prod ? 'dist' : 'dev'
+
+const mode = prod ? 'production' : 'development'
+const devtool = prod ? 'inline-sourcemap' : false
+
+let optimization
+if (prod) {
+    // optimization = {
+    //     minimizer: [
+    //         new UglifyJsPlugin({
+    //             test: /\.js(\?.*)?$/i,
+    //             parallel: true,
+    //             cache: true,
+    //             uglifyOptions: {
+    //                 compress: true,
+    //                 output: {
+    //                     comments: false
+    //                 }
+    //             }
+    //         })
+    //     ]
+    // }
+    //UglifyPlugin doesn't work with React Hooks atm.
+}
 module.exports = {
     entry: {
         main: ['@babel/polyfill', './chatbox/index.js']
     },
     output: {
         filename: '[name].[chunkhash].js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'build/' + env),
         publicPath: '/'
     },
-    mode: 'development',
-    devtool: 'inline-sourcemap',
+    mode,
+    devtool,
+    optimization,
     resolve: {
         extensions: ['.js', '.jsx'],
         alias: {
@@ -44,7 +69,7 @@ module.exports = {
                     {
                         loader: 'image-webpack-loader',
                         options: {
-                            disable: true
+                            disabled: true
                         }
                     }
                 ]
@@ -59,37 +84,12 @@ module.exports = {
                     'sass-loader'
                 ]
             }
-            // {
-            //     test: /\.scss$/,
-            //     use: ExtractTextPlugin.extract({
-            //         fallback: 'style-loader',
-            //         use: [
-            //             {
-            //                 loader: 'css-loader',
-            //                 options: {
-            //                     modules: true,
-            //                     importLoaders: 1,
-            //                     localIdentName: '[hash:base64:10]',
-            //                     sourceMap: false
-            //                 }
-            //             },
-            //             {
-            //                 loader: 'postcss-loader',
-            //                 options: {
-            //                     config: {
-            //                         path: `${__dirname}/postcss.config.js`
-            //                     }
-            //                 }
-            //             }
-            //         ]
-            //     })
-            // }
         ]
     },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Esmae Chat App',
-            filename: 'chat.html',
+            filename: 'index.html',
             inject: false,
             hash: true,
             template: 'index.html'
@@ -97,19 +97,6 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: 'style.[contenthash].css'
         }),
-        new WebpackMd5Hash(),
-        new CleanWebpackPlugin('dist', {})
-        // new ExtractTextPlugin({
-        //     filename: 'style.[hash].css',
-        //     disable: false,
-        //     allChunks: true
-        // })
-        // new CopyWebpackPlugin([
-        //     {
-        //         to: 'assets/images/',
-        //         from: './assets/images/',
-        //         toType: 'dir'
-        //     }
-        // ]),
+        new WebpackMd5Hash()
     ]
 }

@@ -1,0 +1,23 @@
+version: '3'
+services:
+    web:
+        build: .
+        command: node ./server/index.js
+        ports:
+            - '9912:9912'
+        depends_on:
+            - redis_db
+        links:
+            - redis_db
+        environment:
+            - REDIS_URL=redis://cache
+            - PRODUCTION=true
+            - URL_PREFIX=/chat
+            - CONTAINER=true
+    redis_db:
+        image: redis
+        container_name: redis_db
+        # ports:
+        #     - '6379:6379'
+        # expose:
+        #     - '6379'

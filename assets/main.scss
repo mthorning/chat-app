@@ -29,17 +29,37 @@ body {
     width: 90%;
     margin: auto;
     display: grid;
-    grid-template-columns: 2fr 5fr 5fr 2fr;
-    grid-template-rows: 1fr 10fr 10fr 1fr;
+    grid-template-columns: 2fr 20px 5fr 5fr 2fr;
+    grid-template-rows: 2fr 10fr 10fr 1fr;
     grid-template-areas:
-        '......   ....   ....   session'
-        'online   chat   chat   ......'
-        'online   chat   chat   ......'
-        '.......  ....   ....   ......';
+        '...... .  ....   ....   session'
+        'online .  chat   chat   ......'
+        'online .  chat   chat   ......'
+        '...... .  ....   ....   ......';
 }
 
 .online-component {
     grid-area: online;
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        li {
+            background-color: $message-area-bg-color;
+            border-radius: $br;
+            padding-left: 1em;
+            text-indent: -0.7em;
+            display: inline-block;
+            padding-right: 10px;
+        }
+        li::before {
+            content: '• ';
+            color: green;
+            font-size: 20px;
+            line-height: 0;
+        }
+    }
 }
 
 .session-bar-component {

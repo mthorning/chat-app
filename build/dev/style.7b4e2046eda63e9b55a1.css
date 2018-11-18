@@ -1,0 +1,114 @@
+@charset "UTF-8";
+body {
+  margin: 0; }
+
+#root {
+  font-family: 'Source Sans Pro', sans-serif;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background: url(/824e3ea01638d46f08bbf0524c0964ae.jpg) no-repeat center center fixed;
+  background-size: cover; }
+
+.app-area {
+  max-width: 900px;
+  padding: 10px 0;
+  height: 100%;
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 2fr 20px 5fr 5fr 2fr;
+  grid-template-rows: 2fr 10fr 10fr 1fr;
+  grid-template-areas: '...... .  ....   ....   session' 'online .  chat   chat   ......' 'online .  chat   chat   ......' '...... .  ....   ....   ......'; }
+
+.online-component {
+  grid-area: online; }
+  .online-component ul {
+    padding: 0;
+    margin: 0;
+    list-style: none; }
+    .online-component ul li {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding-left: 1em;
+      text-indent: -0.7em;
+      display: inline-block;
+      padding-right: 10px; }
+    .online-component ul li::before {
+      content: '\2022   ';
+      color: green;
+      font-size: 20px;
+      line-height: 0; }
+
+.session-bar-component {
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  grid-area: session;
+  text-align: right;
+  display: flex;
+  flex-direction: row; }
+  .session-bar-component .display-name {
+    display: inline;
+    margin: 0;
+    font-size: 23px;
+    color: rgba(250, 9, 207, 0.42); }
+  .session-bar-component .logout > svg {
+    font-size: 30px;
+    color: rgba(250, 9, 207, 0.42); }
+  .session-bar-component .logout > svg:hover {
+    color: #fa09cf; }
+
+.chat-area {
+  border-radius: 10px;
+  box-shadow: 3px 3px 5px #777;
+  grid-area: chat;
+  display: flex;
+  flex-direction: column; }
+
+.conversation-component,
+.msg-input-component {
+  background-color: rgba(255, 255, 255, 0.8); }
+
+.conversation-component {
+  border-radius: 10px 10px 0 0;
+  width: 100%;
+  display: flex;
+  flex: 5;
+  flex-direction: column;
+  align-items: start;
+  overflow: auto; }
+  .conversation-component .message {
+    border: 1px solid #aaa;
+    width: 50%;
+    padding: 10px;
+    margin: 10px 10px; }
+
+.msg-input-component {
+  border-radius: 0 0 10px 10px;
+  flex: 1 1;
+  padding: 0; }
+  .msg-input-component textarea {
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 15px;
+    background-color: rgba(100, 100, 100, 0.1);
+    resize: none;
+    margin: auto;
+    vertical-align: text-top;
+    height: calc(100% - 30px);
+    width: calc(100% - 30px);
+    border: none; }
+  .msg-input-component textarea:focus {
+    outline: none; }
+
+.sender-msg {
+  align-self: flex-start;
+  border-radius: 0 10px 10px 10px;
+  background-color: cornsilk; }
+
+.own-msg {
+  align-self: flex-end;
+  border-radius: 10px 0 10px 10px;
+  background-color: pink; }
+

@@ -1,5 +1,8 @@
+const container = process.env.CONTAINER
+const redisUrl = process.env.REDIS_URL || ''
 const redis = require('redis')
-const client = redis.createClient()
+// const client = redis.createClient()
+const client = redis.createClient(redisUrl)
 require('./redisConnect')(client)
 
 const express = require('express')
@@ -11,15 +14,21 @@ app.use(bodyParser.json())
 const session = require('express-session')
 const redisStore = require('connect-redis')(session)
 const uuid = require('uuid/v4')
+
+// const devStoreOptions = {
+//     host: 'localhost',
+//     port: 6379,
+//     client,
+//     ttl: 260
+// }
+
+// const chosenOptions = container ? containerStoreOptions : devStoreOptions
 app.use(
     session({
         secret: 'esmaesqishpants',
         genid: req => uuid(),
         store: new redisStore({
-            host: 'localhost',
-            port: 6379,
-            client,
-            ttl: 260
+            client
         }),
         resave: false,
         saveUninitialized: true
@@ -37,4 +46,4 @@ const socketWithClient = socketFuncs(client, io)
 io.on('connection', socketWithClient)
 
 require('./appRoutes')(express, app, passport, client)
-http.listen(3000, () => console.log('Listening on port 3000'))
+http.listen(9912, () => console.log('Listening on port 9912'))
