@@ -1,7 +1,5 @@
-const container = process.env.CONTAINER
 const redisUrl = process.env.REDIS_URL || ''
 const redis = require('redis')
-// const client = redis.createClient()
 const client = redis.createClient(redisUrl)
 require('./redisConnect')(client)
 
