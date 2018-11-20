@@ -10,14 +10,10 @@ services:
         links:
             - redis_db
         environment:
-            - REDIS_URL=redis://cache
+            - REDIS_URL=redis://redis_db
             - PRODUCTION=true
             - URL_PREFIX=/chat
             - CONTAINER=true
     redis_db:
         image: redis
         container_name: redis_db
-        # ports:
-        #     - '6379:6379'
-        # expose:
-        #     - '6379'

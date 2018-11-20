@@ -7,4 +7,3 @@ RUN npm install --production
 
 COPY ./server ./server
 COPY ./build/dist ./build/dist
-COPY ./login ./login
