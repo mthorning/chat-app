@@ -24,7 +24,6 @@ function Online() {
         })
     }, [])
 
-    console.log('users: ', state.onlineUsers)
     return (
         <div className="online-component">
             <ul>

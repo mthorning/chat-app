@@ -12,11 +12,6 @@ module.exports = (client, io) => socket => {
 
     socket.on('chat message', packet => {
         let responsePacket = { ...packet }
-        if (packet.username === username) {
-            responsePacket.type = 'own'
-        } else {
-            responsePacket.type = 'sender'
-        }
         io.emit('chat message', responsePacket)
     })
 

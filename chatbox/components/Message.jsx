@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
+import { UserContext } from 'contexts'
 
 const propTypes = {
     message: PropTypes.string.isRequired,
@@ -8,9 +9,10 @@ const propTypes = {
 }
 
 function Message(props) {
-    const { message, displayName, type } = props
+    const { message, displayName, username } = props
+    const whoiam = useContext(UserContext)
 
-    if (type === 'own') {
+    if (username === whoiam.username) {
         return <div className="message own-msg">{message}</div>
     } else {
         return (
