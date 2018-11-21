@@ -4,7 +4,7 @@ function check(err) {
 
 module.exports = client => {
     client.on('connect', () => {
-        const users = require('./user.json')
+        const users = require('./users.json')
         console.log('Redis Connected')
 
         for (let user in users) {
