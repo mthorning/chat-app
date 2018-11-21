@@ -9,7 +9,8 @@
         "dev": "rm -rf ./build/dev; webpack --config webpack.config.js --watch",
         "prod": "rm -rf ./build/dist; PRODUCTION=true webpack --config webpack.config.js",
         "start": "npm run parcel && npm run server",
-        "release": "npm run prod && ./release.sh"
+        "release": "npm run prod && ./release.sh",
+        "postversion": "git push && git push --tags"
     },
     "author": "",
     "license": "ISC",
