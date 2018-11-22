@@ -107,13 +107,15 @@ body {
     flex: 5;
     flex-direction: column;
     align-items: start;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     .message {
         border: 1px solid #aaa;
         width: 50%;
         padding: $standard-padding;
         margin: 10px 10px;
+        overflow-wrap: break-word;
     }
 }
 

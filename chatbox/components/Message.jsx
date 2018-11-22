@@ -17,7 +17,8 @@ function Message(props) {
     } else {
         return (
             <div className="message sender-msg">
-                {displayName}: {message}
+                <strong>{displayName} says </strong>
+                {message}
             </div>
         )
     }
