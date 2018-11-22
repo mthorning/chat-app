@@ -1,22 +1,21 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const sanitize = require('./sanitizeString')
 
 module.exports = client => {
     passport.use(
         new LocalStrategy((username, password, done) => {
-            const userFound = client.hget(
-                'passwords',
-                username,
-                (err, pass) => {
-                    if (err) return done(err)
+            const uname = sanitize(username)
+            const pword = sanitize(password)
+            const userFound = client.hget('passwords', uname, (err, pass) => {
+                if (err) return done(err)
 
-                    if (!pass) return done(null, false)
+                if (!pass) return done(null, false)
 
-                    if (pass !== password) return done(null, false)
+                if (pass !== pword) return done(null, false)
 
-                    return done(null, username)
-                }
-            )
+                return done(null, uname)
+            })
             if (userFound === false) return done(null, false)
         })
     )

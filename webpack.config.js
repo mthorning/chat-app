@@ -94,13 +94,6 @@ module.exports = {
             hash: true,
             template: 'index.html'
         }),
-        new HtmlWebpackPlugin({
-            title: 'login',
-            filename: 'login.html',
-            inject: false,
-            hash: true,
-            template: './login/index.html'
-        }),
         new MiniCssExtractPlugin({
             filename: 'style.[contenthash].css'
         }),

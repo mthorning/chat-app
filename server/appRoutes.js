@@ -16,11 +16,17 @@ module.exports = (express, app, passport, client) => {
     )
 
     app.get('/login', (req, res) => {
-        res.sendFile(path.resolve(wkdir, 'build', env, 'login.html'))
+        const message = req.flash('error')[0]
+        res.render('login', { message })
     })
 
-    app.post('/login', passport.authenticate('local'), (req, res) =>
-        res.redirect('/')
+    app.post(
+        '/login',
+        passport.authenticate('local', {
+            successRedirect: '/',
+            failureRedirect: '/login',
+            failureFlash: 'Incorrect username or password'
+        })
     )
 
     app.get('/logout', (req, res) => {

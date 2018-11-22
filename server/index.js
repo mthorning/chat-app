@@ -1,3 +1,4 @@
+const path = require('path')
 const redisUrl = process.env.REDIS_URL || ''
 const redis = require('redis')
 const client = redis.createClient(redisUrl)
@@ -5,6 +6,10 @@ require('./redisConnect')(client)
 
 const express = require('express')
 const app = express()
+
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'views'))
+
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -32,6 +37,9 @@ app.use(
         saveUninitialized: true
     })
 )
+
+const flash = require('connect-flash')
+app.use(flash())
 
 const passport = require('./passport')(client)
 app.use(passport.initialize())

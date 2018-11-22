@@ -1,0 +1,81 @@
+doctype 5
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    title Login
+    style(type='text/css').
+        body {
+            font: font-family: 'Source Sans Pro', sans-serif;
+            font-size: 20px;
+        }
+
+        .box {
+            box-shadow: 3px 3px 5px #777;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+        }
+
+        .login-form {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-form .container {
+            width: 300px;
+            padding: 15px;
+        }
+        .login-form .container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-form .container form input {
+            margin: 10px;
+            padding: 8px 4px;
+        }
+
+        .login-form .container form input:focus {
+            outline: none;
+        }
+
+
+        .login-form .container form .submit {
+            background-color: #ff00b3cf;
+            color: white;
+            border-radius: 15px;
+        }
+
+        .alert {
+            margin: auto;
+            left: 0;
+            right: 0;
+            position: absolute;
+            max-width: 400px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: .75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: .25rem;
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+    body
+        #message
+            if message  
+                .alert #{message}
+        .login-form
+            .container.box
+                form(method="post" action='/login')
+                    input(autofocus type="text"  placeholder="Name" autocomplete="username" name="username")
+                    input(type="password" placeholder="Password" autocomplete="current-password" name="password")
+                    input.submit(type="submit" value="Enter!") 
+            
+            
