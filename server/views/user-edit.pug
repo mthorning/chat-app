@@ -1,0 +1,25 @@
+doctype 5
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    title Create User
+    style(type='text/css').
+        .container {
+            display: inline-block;
+        }
+        .submit {
+            float: right;
+        }
+
+    body
+        .container
+            form(action='/newUserEdit' method='post')
+                label(for='password') Please choose a new password: 
+                input#password(type='password' placeholder='Password' name='password')
+                br
+                br
+                label(for='display') Please chooose a display name: 
+                input#display(type='text' placeholder='Display Name' name='displayName')
+                br
+                br
+                input.submit(type='submit' value='Submit')

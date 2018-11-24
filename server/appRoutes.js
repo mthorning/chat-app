@@ -1,11 +1,12 @@
 const path = require('path')
+const UserModel = require('./mongo/models/User')
+
 const wkdir = process.cwd()
 const env = process.env.PRODUCTION ? 'dist' : 'dev'
 
 console.log('Env is set as ', env)
-console.log('wkdir ', wkdir)
 
-module.exports = (express, app, passport, client) => {
+module.exports = (express, app, passport, mongo) => {
     app.get(
         '/',
         require('connect-ensure-login').ensureLoggedIn('/login'),
@@ -16,17 +17,34 @@ module.exports = (express, app, passport, client) => {
     )
 
     app.get('/login', (req, res) => {
-        const message = req.flash('error')[0]
-        res.render('login', { message })
+        res.render('login')
     })
 
     app.post(
         '/login',
-        passport.authenticate('local', {
-            successRedirect: '/',
-            failureRedirect: '/login',
-            failureFlash: 'Incorrect username or password'
-        })
+        // passport.authenticate('local', {
+        //     successRedirect: '/',
+        //     failureRedirect: '/login',
+        //     failureFlash: 'Incorrect username or password'
+        // })
+        (req, res, next) => {
+            passport.authenticate('local', (err, user, info) => {
+                if (err) return next(err)
+                if (!user) {
+                    const message = info.error
+                    return res.render('login', { message })
+                }
+
+                req.logIn(user, function(err) {
+                    if (err) return next(err)
+                    console.log(user)
+                    if (user.newUser) {
+                        return res.render('user-edit')
+                    }
+                    return res.redirect('/')
+                })
+            })(req, res, next)
+        }
     )
 
     app.get('/logout', (req, res) => {
@@ -34,14 +52,19 @@ module.exports = (express, app, passport, client) => {
         res.redirect('/')
     })
 
+    app.post(
+        '/newUserEdit',
+        require('connect-ensure-login').ensureLoggedIn('/login'),
+        (req, res) => {
+            const username =
+                req.session && req.session.passport && req.session.passport.user
+            console.log('username = ', username)
+        }
+    )
+
     app.get('/whoami', (req, res) => {
         const username =
             req.session && req.session.passport && req.session.passport.user
-
-        client.hgetall(username, (err, userData) => {
-            if (err) res.status(500).send(err)
-
-            if (userData) res.status(200).send(userData)
-        })
+        console.log('user is %s.', username)
     })
 }

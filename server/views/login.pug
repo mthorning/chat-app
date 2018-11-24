@@ -1,7 +1,7 @@
 doctype 5
-html(lang="en")
+html(lang='en')
   head
-    meta(charset="UTF-8")
+    meta(charset='UTF-8')
     title Login
     style(type='text/css').
         body {
@@ -61,7 +61,7 @@ html(lang="en")
             margin-bottom: 1rem;
             border: 1px solid transparent;
             border-radius: .25rem;
-            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+            font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';
             font-size: 1rem;
             font-weight: 400;
             line-height: 1.5;
@@ -73,9 +73,9 @@ html(lang="en")
                 .alert #{message}
         .login-form
             .container.box
-                form(method="post" action='/login')
-                    input(autofocus type="text"  placeholder="Name" autocomplete="username" name="username")
-                    input(type="password" placeholder="Password" autocomplete="current-password" name="password")
-                    input.submit(type="submit" value="Enter!") 
+                form(method='post' action='/login')
+                    input(autofocus type='text'  placeholder='Name' autocomplete='username' name='username')
+                    input(type='password' placeholder='Password' autocomplete='current-password' name='password')
+                    input.submit(type='submit' value='Enter!') 
             
             

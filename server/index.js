@@ -1,55 +1,47 @@
 const path = require('path')
-const redisUrl = process.env.REDIS_URL || ''
-const redis = require('redis')
-const client = redis.createClient(redisUrl)
-require('./redisConnect')(client)
-
 const express = require('express')
+const bodyParser = require('body-parser')
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
+const uuid = require('uuid/v4')
+const flash = require('connect-flash')
+
 const app = express()
+
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
+const socketFuncs = require('./socket')
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
 
-const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-const session = require('express-session')
-const redisStore = require('connect-redis')(session)
-const uuid = require('uuid/v4')
-
-// const devStoreOptions = {
-//     host: 'localhost',
-//     port: 6379,
-//     client,
-//     ttl: 260
-// }
-
-// const chosenOptions = container ? containerStoreOptions : devStoreOptions
 app.use(
     session({
         secret: 'esmaesqishpants',
         genid: req => uuid(),
-        store: new redisStore({
-            client
+        store: new MongoStore({
+            url: 'mongodb://localhost:27017/session-store'
         }),
         resave: false,
         saveUninitialized: true
     })
 )
 
-const flash = require('connect-flash')
 app.use(flash())
 
-const passport = require('./passport')(client)
-app.use(passport.initialize())
-app.use(passport.session())
+const mongo = require('./mongo/connect')
+    .then(() => {
+        const passport = require('./passport')(mongo)
+        app.use(passport.initialize())
+        app.use(passport.session())
 
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
-const socketFuncs = require('./socket')
-const socketWithClient = socketFuncs(client, io)
-io.on('connection', socketWithClient)
+        const socketWithClient = socketFuncs(mongo, io)
+        io.on('connection', socketWithClient)
 
-require('./appRoutes')(express, app, passport, client)
-http.listen(9912, () => console.log('Listening on port 9912'))
+        require('./appRoutes')(express, app, passport, mongo)
+        http.listen(9912, () => console.log('Listening on port 9912'))
+    })
+    .catch(err => console.error(err))

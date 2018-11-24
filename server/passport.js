@@ -1,31 +1,37 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const sanitize = require('./sanitizeString')
+const UserModel = require('./mongo/models/User')
 
-module.exports = client => {
+module.exports = () => {
     passport.use(
         new LocalStrategy((username, password, done) => {
-            const uname = sanitize(username)
-            const pword = sanitize(password)
-            const userFound = client.hget('passwords', uname, (err, pass) => {
-                if (err) return done(err)
-
-                if (!pass) return done(null, false)
-
-                if (pass !== pword) return done(null, false)
-
-                return done(null, uname)
+            UserModel.findOne({ username }, 'password newUser', (err, user) => {
+                if (err) {
+                    return done(err)
+                }
+                if (!user) {
+                    console.log('No such user')
+                    return done(null, false, {
+                        error: 'User does not exist'
+                    })
+                }
+                if (user.password !== password) {
+                    console.log('Incorrect password')
+                    return done(null, false, {
+                        error: 'Incorrect username or password'
+                    })
+                }
+                return done(null, user)
             })
-            if (userFound === false) return done(null, false)
         })
     )
 
     passport.serializeUser((user, done) => done(null, user))
 
-    passport.deserializeUser((user, done) => {
-        client.hget('passwords', user, (err, foundUser) => {
+    passport.deserializeUser((username, done) => {
+        UserModel.findOne({ username }, function(err, user) {
             if (err) return done(null, err)
-            done(null, foundUser)
+            done(null, user)
         })
     })
 
