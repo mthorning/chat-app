@@ -1,15 +1,21 @@
-const path = require('path')
-const express = require('express')
-const bodyParser = require('body-parser')
-const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
-const uuid = require('uuid/v4')
+const redisUrl    = process.env.REDIS_URL || ''
+const express     = require('express')
+const path        = require('path')
+const bodyParser  = require('body-parser')
+const session     = require('express-session')
+const redis       = require('redis')
+const redisClient = redis.createClient(redisUrl)
+const redisStore  = require('connect-redis')(session)
+
+require('./redisConnect')(redisClient)
+
+const uuid  = require('uuid/v4')
 const flash = require('connect-flash')
 
 const app = express()
 
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
+const http        = require('http').Server(app)
+const io          = require('socket.io')(http)
 const socketFuncs = require('./socket')
 
 app.set('view engine', 'pug')
@@ -20,13 +26,11 @@ app.use(bodyParser.json())
 
 app.use(
     session({
-        secret: 'esmaesqishpants',
-        genid: req => uuid(),
-        store: new MongoStore({
-            url: 'mongodb://localhost:27017/session-store'
-        }),
-        resave: false,
-        saveUninitialized: true
+        saveUninitialized: true,
+        secret           : 'esmaesqishpants',
+        genid            : req => uuid(),
+        resave           : false,
+        store            : new redisStore({ redisClient })
     })
 )
 
@@ -38,8 +42,8 @@ const mongo = require('./mongo/connect')
         app.use(passport.initialize())
         app.use(passport.session())
 
-        const socketWithClient = socketFuncs(mongo, io)
-        io.on('connection', socketWithClient)
+        const socketWithRedis = socketFuncs(redisClient, io)
+        io.on('connection', socketWithRedis)
 
         require('./appRoutes')(express, app, passport, mongo)
         http.listen(9912, () => console.log('Listening on port 9912'))

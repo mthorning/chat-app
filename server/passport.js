@@ -1,37 +1,45 @@
-const passport = require('passport')
+const passport      = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const UserModel = require('./mongo/models/User')
+const LoginsModel   = require('./mongo/models/Logins')
+const UsersModel    = require('./mongo/models/Users')
 
 module.exports = () => {
     passport.use(
         new LocalStrategy((username, password, done) => {
-            UserModel.findOne({ username }, 'password newUser', (err, user) => {
+            LoginsModel.findOne({ username }, (err, user) => {
                 if (err) {
                     return done(err)
                 }
                 if (!user) {
-                    console.log('No such user')
-                    return done(null, false, {
-                        error: 'User does not exist'
-                    })
-                }
-                if (user.password !== password) {
-                    console.log('Incorrect password')
+                    console.info('User does not exist')
                     return done(null, false, {
                         error: 'Incorrect username or password'
                     })
                 }
+                if (user.password !== password) {
+                    console.info('Incorrect password')
+                    return done(null, false, {
+                        error: 'Incorrect username or password'
+                    })
+                }
+                //returns user from LoginModel to '/' route
                 return done(null, user)
             })
         })
     )
 
-    passport.serializeUser((user, done) => done(null, user))
+    //serialize returns the _id property from LoginsModel record
+    passport.serializeUser((user, done) => done(null, user._id))
 
-    passport.deserializeUser((username, done) => {
-        UserModel.findOne({ username }, function(err, user) {
+    //deserialize finds the UsersModel record which matches _id
+    //from above
+    passport.deserializeUser((id, done) => {
+        //This data will be attached to all requests at
+        //req.session.passport.user
+        UsersModel.findOne({ id }, function deserialize(err, user) {
             if (err) return done(null, err)
-            done(null, user)
+
+            return done(null, user)
         })
     })
 

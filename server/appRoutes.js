@@ -1,70 +1,68 @@
-const path = require('path')
-const UserModel = require('./mongo/models/User')
+const wkdir              = process.cwd()
+const env                = process.env.PRODUCTION ? 'dist' : 'dev'
+const path               = require('path')
+const { ensureLoggedIn } = require('connect-ensure-login')
 
-const wkdir = process.cwd()
-const env = process.env.PRODUCTION ? 'dist' : 'dev'
-
-console.log('Env is set as ', env)
+console.info('Env is set as', env)
 
 module.exports = (express, app, passport, mongo) => {
-    app.get(
-        '/',
-        require('connect-ensure-login').ensureLoggedIn('/login'),
-        (req, res) => {
+
+    app.get('/', ensureLoggedIn('/login'), (req, res) => {
+        //check whether user is new and redirect to
+        //new user setup page
+        if (req.session.passport.user.newUser) {
+            console.log('new user')
+            return res.render('user-edit')
+        } else {
+            //render the app
             res.sendFile(path.resolve(wkdir, 'build', env, 'index.html'))
             app.use(express.static(path.resolve(wkdir, 'build', env)))
         }
-    )
+    })
 
     app.get('/login', (req, res) => {
         res.render('login')
     })
 
-    app.post(
-        '/login',
-        // passport.authenticate('local', {
-        //     successRedirect: '/',
-        //     failureRedirect: '/login',
-        //     failureFlash: 'Incorrect username or password'
-        // })
-        (req, res, next) => {
-            passport.authenticate('local', (err, user, info) => {
+    app.post('/login', (req, res, next) => {
+        console.log('logging')
+        passport.authenticate(
+            'local',
+            { failureRedirect: '/login' },
+            (err, user, info) => {
+                //user is returned from passport.js
                 if (err) return next(err)
+
                 if (!user) {
                     const message = info.error
                     return res.render('login', { message })
                 }
 
-                req.logIn(user, function(err) {
+                req.logIn(user, function (err) {
                     if (err) return next(err)
-                    console.log(user)
-                    if (user.newUser) {
-                        return res.render('user-edit')
-                    }
+
                     return res.redirect('/')
                 })
-            })(req, res, next)
-        }
-    )
+            }
+        )(req, res, next)
+    })
 
     app.get('/logout', (req, res) => {
         req.logout()
         res.redirect('/')
     })
 
-    app.post(
-        '/newUserEdit',
-        require('connect-ensure-login').ensureLoggedIn('/login'),
-        (req, res) => {
-            const username =
-                req.session && req.session.passport && req.session.passport.user
-            console.log('username = ', username)
-        }
-    )
+    app.post('/newUserEdit', (req, res) => {
+        console.log('called nue')
+        const { user } = req.session.passport
+        //user will only contain ID at this point
+        console.log(req.body)
+        const { password1, password2, displayName } = req.body
+        console.log('edit', password1, displayName)
+    })
 
     app.get('/whoami', (req, res) => {
-        const username =
-            req.session && req.session.passport && req.session.passport.user
-        console.log('user is %s.', username)
+        const { user } = req.session.passport
+        //check passwords match
     })
 }

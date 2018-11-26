@@ -8,7 +8,7 @@ module.exports = new Promise(async (resolve, reject) => {
         { useNewUrlParser: true }
     )
     mongoose.Promise = global.Promise
-    const db = mongoose.connection
+    const db         = mongoose.connection
 
     db.on('error', err => reject('MongoDB connection error:', err))
 

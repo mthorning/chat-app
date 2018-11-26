@@ -10,16 +10,31 @@ html(lang='en')
         .submit {
             float: right;
         }
+        label {
+            display: block;
+            text-align: right;
+        }
 
     body
         .container
             form(action='/newUserEdit' method='post')
-                label(for='password') Please choose a new password: 
-                input#password(type='password' placeholder='Password' name='password')
-                br
-                br
-                label(for='display') Please chooose a display name: 
-                input#display(type='text' placeholder='Display Name' name='displayName')
-                br
-                br
-                input.submit(type='submit' value='Submit')
+                table
+                    tr
+                        td
+                            label(for='password1') Please choose a new password: 
+                        td
+                            input#password1(type='password' autocomplete="new-password" autofocus placeholder='Password' name='password1')
+                    tr
+                        td
+                            label(for='password2') Please retype your password: 
+                        td
+                            input#password2(type='password' autocomplete="new-password" placeholder='Password' name='password2')
+                    tr
+                        td
+                            label(for='displayName') Please chooose a display name: 
+                        td
+                            input#displayName(type='text' placeholder='Display Name' name='displayName')
+                    tr
+                        td
+                        td
+                            input.submit(type='submit' value='Submit')
