@@ -6,10 +6,9 @@ const password    = require('password-hash-and-salt')
 
 console.info('Env is set as', env)
 
-module.exports = (express, app, passport, mongo) => {
+module.exports = (express, app, passport) => {
 
     app.get('/', (req, res) => {
-        //render the app
         if(req.user && req.user.newUser) {
             return res.render('user-edit')
         } else if(req.user) {
@@ -22,6 +21,20 @@ module.exports = (express, app, passport, mongo) => {
 
     app.get('/login', (req, res) => {
         res.render('login')
+    })
+
+    app.get('/logout', (req, res) => {
+        req.logout()
+        res.redirect('/')
+    })
+
+    app.get('/whoami', (req, res) => {
+        if(req.user) {
+            const { displayName, username } = req.user
+            res.status(200).send({ displayName, username })
+        } else {
+            res.status(404).send({ message: 'User not found' })
+        }
     })
 
     app.post('/login', (req, res, next) => {
@@ -45,15 +58,11 @@ module.exports = (express, app, passport, mongo) => {
         )(req, res, next)
     })
 
-    app.get('/logout', (req, res) => {
-        req.logout()
-        res.redirect('/')
-    })
-
     app.post('/newUserEdit', (req, res) => {
         const { user } = req
         const { password1, password2, displayName } = req.body
-        if(password1 === password2 && displayName) {
+        const pwordMatch = password1 === password2
+        if(pwordMatch && displayName) {
             UserModel.findById(user.id, (err, userDoc) => {
                 if(err) console.error(err)
                 if(!userDoc) console.error('No user found', user.id)
@@ -71,17 +80,10 @@ module.exports = (express, app, passport, mongo) => {
                 }
             });
         } else {
-            const message = 'Please try again'
-            res.render('user-edit', { message })
-        }
-    })
-
-    app.get('/whoami', (req, res) => {
-        if(req.user) {
-            const { displayName, username } = req.user
-            res.status(200).send({ displayName, username })
-        } else {
-            res.status(404).send({ message: 'User not found' })
+            const message = {}
+            if(!displayName) message['displayName'] = 'Please enter a display name.'
+            if(!pwordMatch) message['password'] = 'Passwords don\'t match.'
+            res.render('user-edit', { ...message })
         }
     })
 }
