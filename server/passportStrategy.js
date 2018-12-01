@@ -1,12 +1,10 @@
-const passport      = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const LoginsModel   = require('./mongo/models/Logins')
-const UsersModel    = require('./mongo/models/Users')
+const UserModel    = require('./mongo/models/User')
 
-module.exports = () => {
+module.exports = passport => {
     passport.use(
         new LocalStrategy((username, password, done) => {
-            LoginsModel.findOne({ username }, (err, user) => {
+            UserModel.findOne({ username }, async (err, user) => {
                 if (err) {
                     return done(err)
                 }
@@ -22,24 +20,23 @@ module.exports = () => {
                         error: 'Incorrect username or password'
                     })
                 }
-                //returns user from LoginModel to '/' route
                 return done(null, user)
             })
         })
     )
 
     //serialize returns the _id property from LoginsModel record
-    passport.serializeUser((user, done) => done(null, user._id))
+    passport.serializeUser((user, done) => done(null, user.id))
 
     //deserialize finds the UsersModel record which matches _id
     //from above
     passport.deserializeUser((id, done) => {
         //This data will be attached to all requests at
         //req.session.passport.user
-        UsersModel.findOne({ id }, function deserialize(err, user) {
-            if (err) return done(null, err)
-
-            return done(null, user)
+        UserModel.findById(id, (err, user) => {
+            console.log('user = ', user)
+            if(err) done(err)
+            done(null, user)
         })
     })
 

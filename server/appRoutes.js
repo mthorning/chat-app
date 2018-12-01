@@ -1,22 +1,21 @@
 const wkdir              = process.cwd()
 const env                = process.env.PRODUCTION ? 'dist' : 'dev'
 const path               = require('path')
-const { ensureLoggedIn } = require('connect-ensure-login')
+const UserModel          = require('./mongo/models/User')
 
 console.info('Env is set as', env)
 
 module.exports = (express, app, passport, mongo) => {
 
-    app.get('/', ensureLoggedIn('/login'), (req, res) => {
-        //check whether user is new and redirect to
-        //new user setup page
-        if (req.session.passport.user.newUser) {
-            console.log('new user')
+    app.get('/', (req, res) => {
+        //render the app
+        if(req.user && req.user.newUser) {
             return res.render('user-edit')
-        } else {
-            //render the app
+        } else if(req.user) {
             res.sendFile(path.resolve(wkdir, 'build', env, 'index.html'))
             app.use(express.static(path.resolve(wkdir, 'build', env)))
+        } else {
+            res.redirect('/login')
         }
     })
 
@@ -25,7 +24,6 @@ module.exports = (express, app, passport, mongo) => {
     })
 
     app.post('/login', (req, res, next) => {
-        console.log('logging')
         passport.authenticate(
             'local',
             { failureRedirect: '/login' },
@@ -34,10 +32,9 @@ module.exports = (express, app, passport, mongo) => {
                 if (err) return next(err)
 
                 if (!user) {
-                    const message = info.error
+                    const message = info && info.error
                     return res.render('login', { message })
                 }
-
                 req.logIn(user, function (err) {
                     if (err) return next(err)
 
@@ -55,14 +52,23 @@ module.exports = (express, app, passport, mongo) => {
     app.post('/newUserEdit', (req, res) => {
         console.log('called nue')
         const { user } = req.session.passport
-        //user will only contain ID at this point
-        console.log(req.body)
         const { password1, password2, displayName } = req.body
-        console.log('edit', password1, displayName)
+        if(password1 === password2) {
+            const update = {
+                password: password1,
+                newUser: false,
+                displayName
+            }
+            UserModel.findOneAndUpdate({ id:user.id }, update, err => {
+                if(err) console.error(err)
+                res.redirect('/')
+            });
+        } else {
+            res.redirect('/')
+        }
     })
 
     app.get('/whoami', (req, res) => {
         const { user } = req.session.passport
-        //check passwords match
     })
 }

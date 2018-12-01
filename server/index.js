@@ -38,9 +38,10 @@ app.use(flash())
 
 const mongo = require('./mongo/connect')
     .then(() => {
-        const passport = require('./passport')(mongo)
+        const passport = require('passport')
         app.use(passport.initialize())
         app.use(passport.session())
+        require('./passportStrategy')(passport)
 
         const socketWithRedis = socketFuncs(redisClient, io)
         io.on('connection', socketWithRedis)

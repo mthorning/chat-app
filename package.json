@@ -5,8 +5,8 @@
     "private": true,
     "scripts": {
         "dbs": "npm run mongo & npm run redis",
-        "server": "nodemon server.js",
-        "debug": "nodemon --inspect server",
+        "server": "nodemon server/index.js",
+        "debug": "nodemon --inspect server/index.js",
         "server-prod": "PRODUCTION=true nodemon server",
         "dev": "rm -rf ./build/dev; webpack --config webpack.config.js --watch",
         "prod": "rm -rf ./build/dist; PRODUCTION=true webpack --config webpack.config.js",
@@ -20,7 +20,6 @@
     "dependencies": {
         "@babel/polyfill": "^7.0.0",
         "body-parser": "^1.18.3",
-        "connect-ensure-login": "^0.1.1",
         "connect-flash": "^0.1.1",
         "connect-redis": "^3.4.0",
         "express": "^4.16.4",
