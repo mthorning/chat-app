@@ -6,8 +6,7 @@ module.exports = (client, io) => socket => {
     let username
 
     socket.on('user connected', packet => {
-        username = packet.username
-        client.sadd('onlineUsers', username, () => sendOnlineUsers())
+        client.sadd('onlineUsers', packet.displayName, () => sendOnlineUsers())
     })
 
     socket.on('chat message', packet => {
@@ -25,23 +24,8 @@ module.exports = (client, io) => socket => {
     function sendOnlineUsers() {
         client.smembers('onlineUsers', (err, list) => {
             check(err)
-            const userDisplayNames = []
-            list.forEach(onlineUser => {
-                userDisplayNames.push(
-                    new Promise((resolve, reject) => {
-                        client.hget(onlineUser, 'displayName', (err, name) => {
-                            if (err) reject(err)
-                            resolve(name)
-                        })
-                    })
-                )
-            })
-            Promise.all(userDisplayNames).then(
-                res => {
-                    io.emit('online users', res)
-                },
-                err => check(err)
-            )
+            console.log(list)
+            io.emit('online users', list)
         })
     }
 }

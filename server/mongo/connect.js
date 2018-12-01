@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose   = require('mongoose')
 const seedLogins = require('./seedLogins')
 
 module.exports = new Promise(async (resolve, reject) => {

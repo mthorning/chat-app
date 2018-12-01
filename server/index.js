@@ -9,11 +9,9 @@ const redisStore  = require('connect-redis')(session)
 
 require('./redisConnect')(redisClient)
 
-const uuid  = require('uuid/v4')
-const flash = require('connect-flash')
-
-const app = express()
-
+const uuid        = require('uuid/v4')
+const flash       = require('connect-flash')
+const app         = express()
 const http        = require('http').Server(app)
 const io          = require('socket.io')(http)
 const socketFuncs = require('./socket')

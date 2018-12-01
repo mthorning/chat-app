@@ -1,7 +1,8 @@
-const wkdir              = process.cwd()
-const env                = process.env.PRODUCTION ? 'dist' : 'dev'
-const path               = require('path')
-const UserModel          = require('./mongo/models/User')
+const wkdir       = process.cwd()
+const env         = process.env.PRODUCTION ? 'dist' : 'dev'
+const path        = require('path')
+const UserModel   = require('./mongo/models/User')
+const password    = require('password-hash-and-salt')
 
 console.info('Env is set as', env)
 
@@ -50,25 +51,37 @@ module.exports = (express, app, passport, mongo) => {
     })
 
     app.post('/newUserEdit', (req, res) => {
-        console.log('called nue')
-        const { user } = req.session.passport
+        const { user } = req
         const { password1, password2, displayName } = req.body
-        if(password1 === password2) {
-            const update = {
-                password: password1,
-                newUser: false,
-                displayName
-            }
-            UserModel.findOneAndUpdate({ id:user.id }, update, err => {
+        if(password1 === password2 && displayName) {
+            UserModel.findById(user.id, (err, userDoc) => {
                 if(err) console.error(err)
-                res.redirect('/')
+                if(!userDoc) console.error('No user found', user.id)
+                if(userDoc) {
+                    password(password1).hash((err, hash) => {
+                        if(err) console.error(err)
+                        userDoc.newUser = false
+                        userDoc.password = hash
+                        userDoc.displayName = displayName
+                        userDoc.save(err => {
+                            if(err) console.error(err)
+                            res.redirect('/')
+                        })
+                    })
+                }
             });
         } else {
-            res.redirect('/')
+            const message = 'Please try again'
+            res.render('user-edit', { message })
         }
     })
 
     app.get('/whoami', (req, res) => {
-        const { user } = req.session.passport
+        if(req.user) {
+            const { displayName, username } = req.user
+            res.status(200).send({ displayName, username })
+        } else {
+            res.status(404).send({ message: 'User not found' })
+        }
     })
 }

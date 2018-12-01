@@ -1,5 +1,6 @@
-const UserModel = require('./models/User')
-const users = require('./users.json')
+const UserModel   = require('./models/User')
+const users       = require('./users.json')
+const password    = require('password-hash-and-salt')
 
 module.exports = () => {
     return new Promise((resolve, reject) => {
@@ -10,18 +11,21 @@ module.exports = () => {
                 if (err) reject(err)
 
                 if (!docs.length) {
-                    UserModel.create(
-                        {
-                            username: user,
-                            password: user,
-                            newUser: true
-                        },
-                        (err, record) => {
-                            if (err) reject(err)
-                            console.info('Record created for %s.', user)
-                            console.log(record)
-                        }
-                    )
+                    password(user).hash(function(err, hash) {
+                        if(err) reject(err)
+                        UserModel.create(
+                            {
+                                username: user,
+                                password: hash,
+                                newUser: true
+                            },
+                            err => {
+                                if (err) reject(err)
+                                console.info('Record created for %s.', user)
+                                resolve(null)
+                            }
+                        )
+                    })
                 }
                 resolve(null)
             })

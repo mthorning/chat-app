@@ -1,5 +1,6 @@
 const LocalStrategy = require('passport-local').Strategy
-const UserModel    = require('./mongo/models/User')
+const UserModel     = require('./mongo/models/User')
+const hash          = require('password-hash-and-salt')
 
 module.exports = passport => {
     passport.use(
@@ -14,13 +15,16 @@ module.exports = passport => {
                         error: 'Incorrect username or password'
                     })
                 }
-                if (user.password !== password) {
-                    console.info('Incorrect password')
-                    return done(null, false, {
-                        error: 'Incorrect username or password'
-                    })
-                }
-                return done(null, user)
+                hash(password).verifyAgainst(user.password, (err, verified) => {
+                    if(err) console.error(err)
+                    if(!verified) {
+                        return done(null, false, {
+                            error: 'Incorrect username or password'
+                        })
+                    } else {
+                        return done(null, user)
+                    }
+                })
             })
         })
     )
@@ -34,7 +38,6 @@ module.exports = passport => {
         //This data will be attached to all requests at
         //req.session.passport.user
         UserModel.findById(id, (err, user) => {
-            console.log('user = ', user)
             if(err) done(err)
             done(null, user)
         })

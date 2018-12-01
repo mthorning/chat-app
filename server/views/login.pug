@@ -69,13 +69,11 @@ html(lang='en')
 
     body
         #message
-            if message  
+            if message
                 .alert #{message}
         .login-form
             .container.box
                 form(method='post' action='/login')
                     input(autofocus type='text'  placeholder='Name' autocomplete='username' name='username')
                     input(type='password' placeholder='Password' autocomplete='current-password' name='password')
-                    input.submit(type='submit' value='Enter!') 
-            
-            
+                    input.submit(type='submit' value='Enter!')

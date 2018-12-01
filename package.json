@@ -13,7 +13,7 @@
         "release": "npm run prod && ./release.sh",
         "postversion": "git push && git push --tags",
         "mongo": "docker run --rm -p 27017:27017 --name mongo_db mongo",
-        "redis": "redis-server"
+        "redis": "docker run --rm -p 6379:6379 --name redis_db redis"
     },
     "author": "",
     "license": "ISC",
