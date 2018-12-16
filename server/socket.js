@@ -1,12 +1,20 @@
-function check(err) {
-    if (err) console.error(err)
-}
+const UserModel   = require('./mongo/models/User')
 
-module.exports = (client, io) => socket => {
-    let username
+module.exports = io => socket => {
+
+    let userId
 
     socket.on('user connected', packet => {
-        client.sadd('onlineUsers', packet.displayName, () => sendOnlineUsers())
+        userId = packet.id
+        console.log('user id', userId)
+        UserModel.findByIdAndUpdate(
+            userId,
+            { $set: { online: true } },
+            err => {
+                if(err) console.error(err)
+                sendOnlineUsers()
+            }
+        )
     })
 
     socket.on('chat message', packet => {
@@ -15,17 +23,22 @@ module.exports = (client, io) => socket => {
     })
 
     socket.on('disconnect', () => {
-        client.srem('onlineUsers', username, err => {
-            check(err)
-            sendOnlineUsers()
-        })
+        UserModel.findByIdAndUpdate(
+            userId,
+            { $set: { online: false } },
+            err => {
+                if(err) console.error(err)
+                sendOnlineUsers()
+            }
+        )
     })
 
     function sendOnlineUsers() {
-        client.smembers('onlineUsers', (err, list) => {
-            check(err)
-            console.log(list)
-            io.emit('online users', list)
-        })
+        UserModel
+            .find({ online: true }, (err, users) => {
+                if(err) console.error(err)
+                console.log('online: ', users)
+                io.emit('online users', users)
+            })
     }
 }

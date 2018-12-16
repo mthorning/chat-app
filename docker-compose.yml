@@ -2,18 +2,21 @@ version: '3'
 services:
     web:
         build: .
+        container_name: squishychat_web
         command: node ./server/index.js
         ports:
             - '9912:9912'
         depends_on:
-            - redis_db
+            - mongo_db
         links:
-            - redis_db
+            - mongo_db
         environment:
-            - REDIS_URL=redis://redis_db
+            - MONGO_URL='mongodb://mongo_db'
             - PRODUCTION=true
-            - URL_PREFIX=/chat
-            - CONTAINER=true
-    redis_db:
-        image: redis
-        container_name: redis_db
+    mongo_db:
+        image: mongo
+        container_name: mongo_db
+        # ports:
+        # - "27017:27017"
+        # volumes:
+        # - ./data:/data/db

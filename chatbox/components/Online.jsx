@@ -2,13 +2,13 @@ import React, { useEffect, useReducer, useContext } from 'react'
 import { SocketContext, UserContext } from 'contexts'
 
 function Online() {
-    const { displayName } = useContext(UserContext)
+    const { id } = useContext(UserContext)
     function reducer(state, action) {
         switch (action.type) {
             case 'update':
                 return {
                     onlineUsers: action.payload.filter(
-                        usr => usr !== displayName
+                        user => user._id !== id
                     )
                 }
             default:
@@ -28,7 +28,7 @@ function Online() {
         <div className="online-component">
             <ul>
                 {state.onlineUsers.map(user => (
-                    <li key={user}>{user}</li>
+                    <li key={user._id}>{user.displayName}</li>
                 ))}
             </ul>
         </div>

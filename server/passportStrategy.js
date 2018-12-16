@@ -16,12 +16,15 @@ module.exports = passport => {
                     })
                 }
                 hash(password).verifyAgainst(user.password, (err, verified) => {
+                    console.log('verifying password')
                     if(err) console.error(err)
                     if(!verified) {
+                        console.log('Passwords do not match')
                         return done(null, false, {
                             error: 'Incorrect username or password'
                         })
                     } else {
+                        console.log('password verified', user)
                         return done(null, user)
                     }
                 })
@@ -35,9 +38,11 @@ module.exports = passport => {
     //deserialize finds the UsersModel record which matches _id
     //from above
     passport.deserializeUser((id, done) => {
+        console.log('passport deserializing...')
         //This data will be attached to all requests at
         //req.session.passport.user
         UserModel.findById(id, (err, user) => {
+            console.log('strategy deserialize', user)
             if(err) done(err)
             done(null, user)
         })

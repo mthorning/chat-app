@@ -4,16 +4,15 @@
     "description": "",
     "private": true,
     "scripts": {
-        "dbs": "npm run mongo & npm run redis",
         "server": "nodemon server/index.js",
         "debug": "nodemon --inspect server/index.js",
         "server-prod": "PRODUCTION=true nodemon server",
         "dev": "rm -rf ./build/dev; webpack --config webpack.config.js --watch",
         "prod": "rm -rf ./build/dist; PRODUCTION=true webpack --config webpack.config.js",
-        "release": "npm run prod && ./release.sh",
+        "release-server": "npm run prod && ./release.sh server",
+        "release-vps": "npm run prod && ./release.sh vps",
         "postversion": "git push && git push --tags",
-        "mongo": "docker run --rm -p 27017:27017 --name mongo_db mongo",
-        "redis": "docker run --rm -p 6379:6379 --name redis_db redis"
+        "mongo": "docker run --rm -p 27017:27017 --name mongo_db mongo"
     },
     "author": "",
     "license": "ISC",
@@ -21,7 +20,7 @@
         "@babel/polyfill": "^7.0.0",
         "body-parser": "^1.18.3",
         "connect-flash": "^0.1.1",
-        "connect-redis": "^3.4.0",
+        "connect-mongo": "^2.0.3",
         "express": "^4.16.4",
         "express-session": "^1.15.6",
         "mongoose": "^5.3.13",

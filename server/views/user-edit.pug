@@ -33,18 +33,18 @@ html(lang='en')
                         td
                             input#password2(type='password' autocomplete="new-password" placeholder='Password' name='password2')
                         td
-                            #password
-                                if password
-                                    .validation #{password}
+                            #passwordError
+                                if passwordError
+                                    .validation #{passwordError}
                     tr
                         td
                             label(for='displayName') Please chooose a display name: 
                         td
                             input#displayName(type='text' placeholder='Display Name' name='displayName')
                         td
-                            #displayName
-                                if displayName
-                                    .validation #{displayName}
+                            #displayNameError
+                                if displayNameError
+                                    .validation #{displayNameError}
                     tr
                         td
                         td

@@ -16,7 +16,7 @@ function App() {
         socket.emit('user connected', {
             timestamp: Date.now(),
             displayName: whoiam.displayName,
-            username: whoiam.username
+            id: whoiam.id
         })
     }, [])
 

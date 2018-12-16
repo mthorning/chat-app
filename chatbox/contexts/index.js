@@ -2,7 +2,7 @@ import React from 'react'
 
 export const UserContext = React.createContext({
     displayName: '',
-    username: ''
+    id: ''
 })
 
 export const SocketContext = React.createContext({

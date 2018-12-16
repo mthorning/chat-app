@@ -9,7 +9,7 @@ console.log(`Building in ${prod ? 'production' : 'development'} mode`)
 const env = prod ? 'dist' : 'dev'
 
 const mode = prod ? 'production' : 'development'
-const devtool = prod ? 'inline-sourcemap' : false
+const devtool = prod ? false : 'inline-sourcemap'
 
 let optimization
 if (prod) {

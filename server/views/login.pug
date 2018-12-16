@@ -68,9 +68,9 @@ html(lang='en')
         }
 
     body
-        #message
-            if message
-                .alert #{message}
+        #validationError
+            if validationError
+                .alert #{validationError}
         .login-form
             .container.box
                 form(method='post' action='/login')

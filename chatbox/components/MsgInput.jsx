@@ -3,7 +3,7 @@ import { UserContext, SocketContext } from 'contexts'
 
 function MsgInput() {
     const [msg, setMsg] = useState('')
-    const { username, displayName } = useContext(UserContext)
+    const { id, displayName } = useContext(UserContext)
     const socket = useContext(SocketContext)
 
     function inputHandler(e) {
@@ -14,7 +14,7 @@ function MsgInput() {
             socket.emit('chat message', {
                 message,
                 timestamp,
-                username,
+                id,
                 displayName
             })
             setMsg('')
