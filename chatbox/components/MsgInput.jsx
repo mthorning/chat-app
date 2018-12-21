@@ -13,13 +13,15 @@ function MsgInput() {
             e.preventDefault()
             const [msgType, message] = newMessage(e.target.value)
             const timestamp = Date.now()
-            socket.emit(msgType, {
-                message,
-                timestamp,
-                id,
-                displayName
-            })
-            setMsg('')
+            if(message.length) {
+                socket.emit(msgType, {
+                    message,
+                    timestamp,
+                    id,
+                    displayName
+                })
+                setMsg('')
+            }
         }
     }
 
