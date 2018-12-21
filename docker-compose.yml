@@ -4,6 +4,7 @@ services:
         build: .
         container_name: squishychat_web
         command: node ./server/index.js
+        restart: always
         ports:
             - '9912:9912'
         depends_on:
@@ -15,6 +16,7 @@ services:
             - PRODUCTION=true
     mongo_db:
         image: mongo
+        restart: always
         container_name: mongo_db
         # ports:
         # - "27017:27017"
