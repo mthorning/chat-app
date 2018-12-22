@@ -4,6 +4,7 @@ $standard-padding: 10px;
 $message-area-bg-color: rgba(255, 255, 255, 0.8);
 $sender-message-color: rgb(255, 248, 220);
 $own-message-color: rgb(255, 192, 203);
+$adult-message-color: rgb(255, 255, 255);
 $br: 10px;
 
 body {
@@ -142,14 +143,27 @@ body {
     }
 }
 
-.sender-msg {
+.sender-msg,
+.adult-msg {
     align-self: flex-start;
     border-radius: 0 $br $br $br;
+}
+
+.sender-msg {
     background-color: $sender-message-color;
 }
 
-.own-msg {
+.own-msg,
+.own-adult-msg {
     align-self: flex-end;
     border-radius: $br 0 $br $br;
+}
+
+.own-msg {
     background-color: $own-message-color;
+}
+
+.adult-msg,
+.own-adult-msg {
+    background-color: $adult-message-color;
 }

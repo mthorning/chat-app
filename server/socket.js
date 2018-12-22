@@ -22,6 +22,11 @@ module.exports = io => socket => {
         io.emit('chat message', responsePacket)
     })
 
+    socket.on('adult message', packet => {
+        let responsePacket = { ...packet }
+        io.emit('adult message', responsePacket)
+    })
+
     socket.on('disconnect', () => {
         UserModel.findByIdAndUpdate(
             userId,

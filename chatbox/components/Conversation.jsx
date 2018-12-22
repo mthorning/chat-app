@@ -20,6 +20,9 @@ function Conversation() {
         socket.on('chat message', packet => {
             dispatch({ type: 'add', payload: packet })
         })
+        socket.on('adult message', packet => {
+            dispatch({ type: 'add', payload: {...packet, adult: true } })
+        })
     }, [])
 
     let convoWrapper

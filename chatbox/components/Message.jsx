@@ -9,18 +9,30 @@ const propTypes = {
 }
 
 function Message(props) {
-    const { message, displayName, id } = props
+    const { message, displayName, id, adult } = props
     const whoiam = useContext(UserContext)
 
-    if (id === whoiam.id) {
-        return <div className="message own-msg">{message}</div>
-    } else {
-        return (
-            <div className="message sender-msg">
-                <strong>{displayName} says </strong>
-                {message}
-            </div>
-        )
+    switch (true) {
+        case id === whoiam.id && adult:
+            return <div className="message own-adult-msg">{message}</div>
+        case id === whoiam.id:
+            return <div className="message own-msg">{message}</div>
+        case whoiam.adult && adult:
+            return (
+                <div className="message adult-msg">
+                    <strong>{displayName}: </strong>
+                    {message}
+                </div>
+            )
+        case !adult:
+            return (
+                <div className="message sender-msg">
+                    <strong>{displayName} says </strong>
+                    {message}
+                </div>
+            )
+        default:
+            return null;
     }
 }
 

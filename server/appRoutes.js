@@ -34,8 +34,8 @@ module.exports = (express, app, passport) => {
 
     app.get('/whoami', (req, res) => {
         if(req.user) {
-            const { displayName, id } = req.user
-            res.status(200).send({ displayName, id })
+            const { displayName, id, adult } = req.user
+            res.status(200).send({ displayName, id, adult })
         } else {
             res.status(404).send({ message: 'User not found' })
         }
