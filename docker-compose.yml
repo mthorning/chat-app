@@ -17,6 +17,6 @@ services:
     mongo_db:
         image: mongo
         restart: always
-        container_name: mongo_db
+        container_name: squishychat_mongo_db
         volumes:
             - /data/db:/data/db
