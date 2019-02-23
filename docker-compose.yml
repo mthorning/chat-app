@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
     web:
         build: .
@@ -6,7 +6,7 @@ services:
         command: node ./server/index.js
         restart: always
         ports:
-            - '9912:9912'
+            - "9912:9912"
         depends_on:
             - mongo_db
         links:
@@ -18,7 +18,5 @@ services:
         image: mongo
         restart: always
         container_name: mongo_db
-        # ports:
-        # - "27017:27017"
-        # volumes:
-        # - ./data:/data/db
+        volumes:
+            - /data/db:/data/db

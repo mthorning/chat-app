@@ -9,7 +9,8 @@
         "server-prod": "PRODUCTION=true nodemon server",
         "dev": "rm -rf ./build/dev; webpack --config webpack.config.js --watch",
         "prod": "rm -rf ./build/dist; PRODUCTION=true webpack --config webpack.config.js",
-        "release-server": "npm run prod && ./release.sh server",
+        "release-pi": "npm run prod && ./release.sh pi",
+	"release-vbox": "npm run prod && ./release.sh vbox",
         "release-vps": "npm run prod && ./release.sh vps",
         "postversion": "git push && git push --tags",
         "mongo": "docker run --rm -p 27017:27017 --name mongo_db mongo"
