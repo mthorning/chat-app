@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react'
 import { UserContext, SocketContext } from 'contexts'
+import { css } from 'emotion'
+import { adultSymbol } from '../constants'
 
-const adultSymbol = '#'
-
-function MsgInput() {
+function MsgInput({ className }) {
     const [msg, setMsg] = useState('')
     const { id, displayName, adult } = useContext(UserContext)
     const socket = useContext(SocketContext)
@@ -13,7 +13,7 @@ function MsgInput() {
             e.preventDefault()
             const [msgType, message] = newMessage(e.target.value)
             const timestamp = Date.now()
-            if(message.length) {
+            if (message.length) {
                 socket.emit(msgType, {
                     message,
                     timestamp,
@@ -26,11 +26,8 @@ function MsgInput() {
     }
 
     function newMessage(message) {
-        if(adult && message.charAt(0) === adultSymbol) {
-            return [
-                'adult message',
-                message.substring(1).trim()
-            ]
+        if (adult && message.charAt(0) === adultSymbol) {
+            return ['adult message', message.substring(1).trim()]
         }
         return ['chat message', message.trim()]
     }
@@ -40,14 +37,15 @@ function MsgInput() {
     }
 
     return (
-        <div className="msg-input-component">
-            <textarea
-                autoFocus
-                value={msg}
-                onChange={changeHandler}
-                onKeyPress={inputHandler}
-            />
-        </div>
+        <textarea
+            autoFocus
+            className={css`
+                background: rgba(200, 200, 200, 0.1);
+            `}
+            value={msg}
+            onChange={changeHandler}
+            onKeyPress={inputHandler}
+        />
     )
 }
 
