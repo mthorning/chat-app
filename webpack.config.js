@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const WebpackMd5Hash = require("webpack-md5-hash");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const prod = process.env.PRODUCTION;
 console.log(`Building in ${prod ? "production" : "development"} mode`);
@@ -74,17 +74,17 @@ module.exports = {
                         }
                     }
                 ]
-            },
-            {
-                test: /\.scss$/,
-                use: [
-                    "style-loader",
-                    MiniCssExtractPlugin.loader,
-                    "css-loader",
-                    "postcss-loader",
-                    "sass-loader"
-                ]
             }
+            // {
+            //     test: /\.scss$/,
+            //     use: [
+            //         "style-loader",
+            //         MiniCssExtractPlugin.loader,
+            //         "css-loader",
+            //         "postcss-loader",
+            //         "sass-loader"
+            //     ]
+            // }
         ]
     },
     plugins: [
@@ -95,9 +95,9 @@ module.exports = {
             hash: true,
             template: "index.html"
         }),
-        new MiniCssExtractPlugin({
-            filename: "style.[contenthash].css"
-        }),
+        // new MiniCssExtractPlugin({
+        //     filename: "style.[contenthash].css"
+        // }),
         new WebpackMd5Hash()
     ]
 };

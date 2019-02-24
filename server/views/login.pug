@@ -1,6 +1,7 @@
 doctype 5
 html(lang='en')
   head
+    meta(name='viewport' content='width=device-width, initial-scale=1')
     meta(charset='UTF-8')
     title Login
     style(type='text/css').
@@ -9,10 +10,19 @@ html(lang='en')
             font-size: 20px;
         }
 
-        .box {
+        @media(min-width: 300px) {
+          .box {
             box-shadow: 3px 3px 5px #777;
             border: 1px solid #ccc;
             border-radius: 15px;
+          }
+          .login-form .container {
+            width: 300px;
+            padding: 15px;
+          }
+        }
+        .box {
+          width: 100%;
         }
 
         .login-form {
@@ -21,11 +31,6 @@ html(lang='en')
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .login-form .container {
-            width: 300px;
-            padding: 15px;
         }
         .login-form .container form {
             display: flex;

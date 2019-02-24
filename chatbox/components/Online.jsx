@@ -1,28 +1,26 @@
-import React, { useEffect, useReducer, useContext } from 'react'
-import { SocketContext, UserContext } from 'contexts'
+import React, { useEffect, useReducer, useContext } from "react";
+import { SocketContext, UserContext } from "contexts";
 
 function Online() {
-    const { id } = useContext(UserContext)
+    const { id } = useContext(UserContext);
     function reducer(state, action) {
         switch (action.type) {
-            case 'update':
+            case "update":
                 return {
-                    onlineUsers: action.payload.filter(
-                        user => user._id !== id
-                    )
-                }
+                    onlineUsers: action.payload.filter(user => user._id !== id)
+                };
             default:
-                return state
+                return state;
         }
     }
-    const [state, dispatch] = useReducer(reducer, { onlineUsers: [] })
-    const socket = useContext(SocketContext)
+    const [state, dispatch] = useReducer(reducer, { onlineUsers: [] });
+    const socket = useContext(SocketContext);
 
     useEffect(() => {
-        socket.on('online users', onlineUsers => {
-            dispatch({ type: 'update', payload: onlineUsers })
-        })
-    }, [])
+        socket.on("online users", onlineUsers => {
+            dispatch({ type: "update", payload: onlineUsers });
+        });
+    }, []);
 
     return (
         <div className="online-component">
@@ -32,13 +30,7 @@ function Online() {
                 ))}
             </ul>
         </div>
-    )
+    );
 }
 
-export default Online
-
-const styles = {
-    wrapper: {
-        width: '100px'
-    }
-}
+export default Online;
