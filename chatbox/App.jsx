@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { UserContext, SocketContext } from 'contexts'
 import { PhoneLayout } from 'components'
 import io from 'socket.io-client'
+import { ThemeProvider } from 'emotion-theming'
+import theme from './theme'
 
 const socket = io()
 
@@ -19,14 +21,16 @@ function App() {
         })
     }
 
-    useEffect(async () => {
+    useEffect(() => {
         getWhoiam()
     }, [])
 
     return (
         <UserContext.Provider value={whoami}>
             <SocketContext.Provider value={socket}>
-                <PhoneLayout />
+                <ThemeProvider theme={theme}>
+                    <PhoneLayout />
+                </ThemeProvider>
             </SocketContext.Provider>
         </UserContext.Provider>
     )

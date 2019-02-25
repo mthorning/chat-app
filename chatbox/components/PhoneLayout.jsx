@@ -1,7 +1,6 @@
 import React from 'react'
-import { css } from 'emotion'
+import { css } from '@emotion/core'
 import { Conversation, MsgInput, PhoneMenu } from './'
-import { headerColor, phoneMenuHeight, phoneMsgInputHeight } from '../constants'
 
 const container = css`
     display: flex;
@@ -10,8 +9,8 @@ const container = css`
     height: 100vh;
     width: 100vw;
 `
-const header = css`
-    flex: 0 0 ${phoneMenuHeight}px;
+const header = theme => css`
+    flex: 0 0 ${theme.phone.menuHeight}px;
 `
 const sessionBar = css`
     h4 {
@@ -21,8 +20,8 @@ const sessionBar = css`
 const conversation = css`
     flex: 1 1 auto;
 `
-const msgInput = css`
-    flex: 0 0 ${phoneMsgInputHeight}px;
+const msgInput = theme => css`
+    flex: 0 0 ${theme.phone.msgInputHeight}px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,14 +34,14 @@ const msgInput = css`
 
 export default function PhoneLayout() {
     return (
-        <div className={container}>
-            <div className={header}>
+        <div css={container}>
+            <div css={header}>
                 <PhoneMenu />
             </div>
-            <div className={conversation}>
+            <div css={conversation}>
                 <Conversation />
             </div>
-            <div className={msgInput}>
+            <div css={msgInput}>
                 <MsgInput />
             </div>
         </div>

@@ -6,7 +6,7 @@ function SessionBar({ className }) {
     const { displayName } = useContext(UserContext)
 
     return (
-        <div className={className}>
+        <div css={className}>
             <h4>{displayName}</h4>
             <a href="/logout">
                 <MdExitToApp />

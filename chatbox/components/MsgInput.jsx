@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react'
 import { UserContext, SocketContext } from 'contexts'
-import { css } from 'emotion'
-import { adultSymbol } from '../constants'
+import { css } from '@emotion/core'
+
+const adultSymbol = '#'
 
 function MsgInput({ className }) {
     const [msg, setMsg] = useState('')
@@ -39,7 +40,7 @@ function MsgInput({ className }) {
     return (
         <textarea
             autoFocus
-            className={css`
+            css={css`
                 background: rgba(200, 200, 200, 0.1);
             `}
             value={msg}
