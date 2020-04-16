@@ -13,11 +13,11 @@ function Online() {
     socket.on("online users", (onlineUsers) => {
       setOnlineUsers(onlineUsers.filter((user) => user._id !== id));
     });
-  }, []);
+  }, [id, onlineUsers, setOnlineUsers]);
 
   useEffect(() => {
     setTimeout(() => setIsOpen(open), 350);
-  }, [open]);
+  }, [open, setIsOpen]);
 
   const onClick = () => setOpen((o) => !o);
 
