@@ -26,6 +26,7 @@ body {
 
 .app-area {
     height: 100%;
+    padding-top: 66px;
 }
 
 .online-component {
@@ -79,6 +80,9 @@ body {
 }
 
 .session-bar-component {
+    position: fixed;
+    right: 0;
+    left: 0;
     background: $navbar-color;
     padding: 16px;
     display: flex;
