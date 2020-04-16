@@ -1,11 +1,12 @@
-$tools-default-color: rgba(250, 9, 207, 0.42);
+$tools-default-color: #e3d5f1;
 $tools-highlight-color: #fa09cf;
-$standard-padding: 10px;
-$message-area-bg-color: rgba(255, 255, 255, 0.8);
+$navbar-color: #ab47a7;
+$message-area-bg-color: rgba(255, 255, 255, 0.6);
 $sender-message-color: rgb(255, 248, 220);
 $own-message-color: rgb(255, 192, 203);
 $adult-message-color: rgb(255, 255, 255);
-$br: 10px;
+$standard-padding: 10px;
+$br: 5px;
 
 body {
     margin: 0;
@@ -24,24 +25,17 @@ body {
 }
 
 .app-area {
-    max-width: 900px;
-    padding: 10px 0;
     height: 100%;
-    width: 90%;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 2fr 20px 5fr 5fr 2fr;
-    grid-template-rows: 2fr 10fr 10fr 1fr;
-    grid-template-areas:
-        '...... .  ....   ....   session'
-        'online .  chat   chat   ......'
-        'online .  chat   chat   ......'
-        '...... .  ....   ....   ......';
 }
 
 .online-component {
-    grid-area: online;
+    float: left;
+    background: $navbar-color;
+    margin-right: 50px;
+    height: 100%;
+    position: fixed;
     ul {
+        transition: width 05s ease;
         padding: 0;
         margin: 0;
         list-style: none;
@@ -49,10 +43,9 @@ body {
         li {
             background-color: $message-area-bg-color;
             border-radius: $br;
-            padding-left: 1em;
-            text-indent: -0.7em;
+            padding: 4px 8px;
             display: inline-block;
-            padding-right: 10px;
+            font-size: 20px;
             margin-bottom: 5px;
         }
         li::before {
@@ -62,19 +55,37 @@ body {
             line-height: 0;
         }
     }
+    .arrow {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 30px;
+        color: $tools-default-color;
+        cursor: pointer;
+    }
+
+    .arrow:hover {
+        color: $tools-highlight-color;
+    }
+}
+
+.open {
+    width: 125px;
+    padding: 16px 8px 16px 8px;
+}
+
+.closed {
+    width: 25px;
 }
 
 .session-bar-component {
-    position: absolute;
-    top: 10px;
-    right: 30px;
-    grid-area: session;
-    text-align: right;
+    background: $navbar-color;
+    padding: 16px;
     display: flex;
-    flex-direction: row;
+    justify-content: flex-end;
     .display-name {
         display: inline;
-        margin: 0;
+        margin: 0 12px 0 0;
         font-size: 23px;
         color: $tools-default-color;
     }
@@ -89,10 +100,17 @@ body {
     }
 }
 
+.chat-area-wrapper {
+    height: 100%;
+    width: 100%;
+}
+
 .chat-area {
+    margin-left: 25px;
+    height: 95%;
     border-radius: $br;
     box-shadow: 3px 3px 5px #777;
-    grid-area: chat;
+    flex: 2 1 0;
     display: flex;
     flex-direction: column;
 }
@@ -108,7 +126,7 @@ body {
     display: flex;
     flex: 5;
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -166,4 +184,25 @@ body {
 .adult-msg,
 .own-adult-msg {
     background-color: $adult-message-color;
+}
+
+@media (min-width: 950px) {
+    .app-area {
+        padding: 0 32px 32px 0;
+    }
+
+    .chat-area-wrapper {
+        padding-top: 32px;
+    }
+
+    .chat-area {
+        margin: auto;
+        height: 85%;
+        max-width: 900px;
+    }
+
+    .online-component.open {
+        padding: 32px 16px 32px 16px;
+        position: relative;
+    }
 }

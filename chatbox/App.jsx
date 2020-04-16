@@ -7,33 +7,35 @@ import io from "socket.io-client";
 const socket = io();
 
 function App() {
-    const [whoami, setWhoami] = useState({});
+  const [whoami, setWhoami] = useState({});
 
-    useEffect(async () => {
-        const res = await fetch("/whoami");
-        const whoiam = await res.json();
-        setWhoami(whoiam);
-        socket.emit("user connected", {
-            timestamp: Date.now(),
-            displayName: whoiam.displayName,
-            id: whoiam.id
-        });
-    }, []);
+  useEffect(async () => {
+    const res = await fetch("/whoami");
+    const whoiam = await res.json();
+    setWhoami(whoiam);
+    socket.emit("user connected", {
+      timestamp: Date.now(),
+      displayName: whoiam.displayName,
+      id: whoiam.id,
+    });
+  }, []);
 
-    return (
-        <UserContext.Provider value={whoami}>
-            <div className="app-area">
-                <SessionBar />
-                <SocketContext.Provider value={socket}>
-                    <Online />
-                    <div className="chat-area">
-                        <Conversation />
-                        <MsgInput />
-                    </div>
-                </SocketContext.Provider>
+  return (
+    <UserContext.Provider value={whoami}>
+      <SessionBar />
+      <div className="app-area">
+        <SocketContext.Provider value={socket}>
+          <Online />
+          <div className="chat-area-wrapper">
+            <div className="chat-area">
+              <Conversation />
+              <MsgInput />
             </div>
-        </UserContext.Provider>
-    );
+          </div>
+        </SocketContext.Provider>
+      </div>
+    </UserContext.Provider>
+  );
 }
 
 export default App;

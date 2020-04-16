@@ -10,7 +10,7 @@
         "dev": "rm -rf ./build/dev; webpack --config webpack.config.js --watch",
         "prod": "rm -rf ./build/dist; PRODUCTION=true webpack --config webpack.config.js",
         "release-vps": "npm run prod && ./release.sh vps",
-        "postversion": "git push && git push --tags",
+        "postversion": "git push && git push --tags && npm run release-vps",
         "mongo": "docker run --rm -p 27017:27017 --name mongo_db -d mongo"
     },
     "author": "Matt Thorning",
