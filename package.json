@@ -9,14 +9,11 @@
         "server-prod": "PRODUCTION=true nodemon server",
         "dev": "rm -rf ./build/dev; webpack --config webpack.config.js --watch",
         "prod": "rm -rf ./build/dist; PRODUCTION=true webpack --config webpack.config.js",
-        "release-pi": "npm run prod && ./release.sh pi",
-        "release-vbox": "npm run prod && ./release.sh vbox",
         "release-vps": "npm run prod && ./release.sh vps",
         "postversion": "git push && git push --tags",
-        "mongo": "docker run --rm -p 27017:27017 --name mongo_db mongo"
+        "mongo": "docker run --rm -p 27017:27017 --name mongo_db -d mongo"
     },
-    "author": "",
-    "license": "ISC",
+    "author": "Matt Thorning",
     "dependencies": {
         "@babel/polyfill": "^7.0.0",
         "body-parser": "^1.18.3",
