@@ -6,6 +6,7 @@ function Online() {
   const { id } = useContext(UserContext);
   const socket = useContext(SocketContext);
   const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
@@ -14,18 +15,24 @@ function Online() {
     });
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => setIsOpen(open), 350);
+  }, [open]);
+
   const onClick = () => setOpen((o) => !o);
 
   return (
     <div className={`online-component ${open ? "open" : "closed"}`}>
-      {open ? (
+      {isOpen ? (
         <>
           <MdKeyboardArrowLeft onClick={onClick} className="arrow" />
-          <ul>
-            {onlineUsers.map((user) => (
-              <li key={user._id}>{user.displayName}</li>
-            ))}
-          </ul>
+          {open && (
+            <ul>
+              {onlineUsers.map((user) => (
+                <li key={user._id}>{user.displayName}</li>
+              ))}
+            </ul>
+          )}
         </>
       ) : (
         <MdKeyboardArrowRight onClick={onClick} className="arrow" />
