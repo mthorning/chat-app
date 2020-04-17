@@ -1,6 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const WebpackMd5Hash = require("webpack-md5-hash");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const workboxPlugin = require("workbox-webpack-plugin");
@@ -85,7 +84,10 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "style.[contenthash].css",
     }),
-    new CopyPlugin([{ from: "manifest.json", to: "manifest.json" }]),
+    new CopyPlugin([
+      { from: "manifest.json", to: "manifest.json" },
+      { from: "icons", to: "icons" },
+    ]),
     new WebpackMd5Hash(),
   ],
 };
