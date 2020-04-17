@@ -5,7 +5,7 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 function Online() {
   const { id } = useContext(UserContext);
   const socket = useContext(SocketContext);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(window.innerWidth >= 950);
   const [isOpen, setIsOpen] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
 

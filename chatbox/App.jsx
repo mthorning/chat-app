@@ -5,6 +5,18 @@ import { MsgInput, Conversation, SessionBar, Online } from "components";
 import io from "socket.io-client";
 
 const socket = io();
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((registration) => {
+        console.log("SW registered: ", registration);
+      })
+      .catch((registrationError) => {
+        console.log("SW registration failed: ", registrationError);
+      });
+  });
+}
 
 function App() {
   const [whoami, setWhoami] = useState({});
