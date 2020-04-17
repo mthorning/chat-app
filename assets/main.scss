@@ -10,10 +10,10 @@ $br: 5px;
 
 body {
     margin: 0;
+    font-family: 'Mali', cursive;
 }
 
 #root {
-    font-family: 'Source Sans Pro', sans-serif;
     overflow: hidden;
     width: 100vw;
     height: 100vh;
@@ -159,9 +159,8 @@ body {
     padding: 0;
 
     textarea {
-        font-size: 16px;
-        font-family: 'Source Sans Pro', sans-serif;
         padding: 15px;
+        font-size: 16px;
         background-color: rgba(100, 100, 100, 0.1);
         resize: none;
         margin: auto;
