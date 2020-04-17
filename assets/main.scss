@@ -26,7 +26,7 @@ body {
 
 .app-area {
     height: 100%;
-    padding-top: 66px;
+    padding-top: 34px;
 }
 
 .online-component {
@@ -71,7 +71,7 @@ body {
 }
 
 .open {
-    width: 125px;
+    width: 175px;
     padding: 16px 8px 16px 8px;
 }
 
@@ -84,7 +84,7 @@ body {
     right: 0;
     left: 0;
     background: $navbar-color;
-    padding: 16px;
+    padding: 0 16px 0;
     display: flex;
     justify-content: flex-end;
     .display-name {
@@ -140,6 +140,16 @@ body {
         padding: $standard-padding;
         margin: 10px 10px;
         overflow-wrap: break-word;
+        position: relative;
+
+        .delete {
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            color: $navbar-color;
+            font-size: 20px;
+        }
     }
 }
 
@@ -192,7 +202,7 @@ body {
 
 @media (min-width: 950px) {
     .app-area {
-        padding: 66px 32px 32px 0;
+        padding: 34px 32px 32px 0;
     }
 
     .chat-area-wrapper {

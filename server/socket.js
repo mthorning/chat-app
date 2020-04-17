@@ -1,60 +1,70 @@
 const UserModel = require("./mongo/models/User");
 const MessageModel = require("./mongo/models/Message");
 
-module.exports = io => socket => {
-    let userId;
+module.exports = (io) => (socket) => {
+  let userId;
 
-    socket.on("user connected", packet => {
-        sendMessageHistory();
-        userId = packet.id;
-        UserModel.findByIdAndUpdate(userId, { $set: { online: true } }, err => {
-            if (err) console.error(err);
-            sendOnlineUsers();
-        });
+  socket.on("user connected", (packet) => {
+    sendMessageHistory();
+    userId = packet.id;
+    UserModel.findByIdAndUpdate(userId, { $set: { online: true } }, (err) => {
+      if (err) console.error(err);
+      sendOnlineUsers();
     });
+  });
 
-    socket.on("chat message", packet => {
-        console.log(packet);
-        saveMessage(packet);
-        let responsePacket = { ...packet };
-        io.emit("chat message", responsePacket);
+  socket.on("chat message", (packet) => {
+    saveMessage(packet);
+  });
+
+  socket.on("adult message", (packet) => {
+    let responsePacket = { ...packet };
+    io.emit("adult message", responsePacket);
+  });
+
+  socket.on("delete message", (id) => {
+    deleteMessage(id);
+  });
+
+  socket.on("disconnect", () => {
+    UserModel.findByIdAndUpdate(userId, { $set: { online: false } }, (err) => {
+      if (err) console.error(err);
+      sendOnlineUsers();
     });
+  });
 
-    socket.on("adult message", packet => {
-        let responsePacket = { ...packet };
-        io.emit("adult message", responsePacket);
+  function sendOnlineUsers() {
+    UserModel.find({ online: true }, (err, users) => {
+      if (err) console.error(err);
+      io.emit("online users", users);
     });
+  }
 
-    socket.on("disconnect", () => {
-        UserModel.findByIdAndUpdate(
-            userId,
-            { $set: { online: false } },
-            err => {
-                if (err) console.error(err);
-                sendOnlineUsers();
-            }
-        );
+  function saveMessage(packet) {
+    MessageModel.create(packet, (err, message) => {
+      if (err) {
+        console.error(err);
+      } else {
+        io.emit("chat message", message);
+      }
     });
+  }
 
-    function sendOnlineUsers() {
-        UserModel.find({ online: true }, (err, users) => {
-            if (err) console.error(err);
-            io.emit("online users", users);
-        });
-    }
+  function deleteMessage(id) {
+    MessageModel.deleteOne({ _id: id }, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        io.emit("message deleted", id);
+      }
+    });
+  }
 
-    function saveMessage(packet) {
-        MessageModel.create(packet, err => {
-            if (err) console.err(err);
-        });
-    }
-
-    function sendMessageHistory() {
-        console.log("Retrieving message history...");
-        MessageModel.find({}, (err, messages) => {
-            if (err) console.error(err);
-            console.log("Retrieved messages", messages);
-            io.emit("message history", messages);
-        });
-    }
+  function sendMessageHistory() {
+    console.log("Retrieving message history...");
+    MessageModel.find({}, (err, messages) => {
+      if (err) console.error(err);
+      io.emit("message history", messages);
+    });
+  }
 };
