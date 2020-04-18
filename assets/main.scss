@@ -13,11 +13,11 @@ body {
     font-family: 'Mali', cursive;
 }
 
-#root {
+.wrapper {
+    background: url('./images/background.jpg') no-repeat center center fixed;
     overflow: hidden;
     width: 100vw;
     height: 100vh;
-    background: url('./images/background.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -200,6 +200,16 @@ body {
 .adult-msg,
 .own-adult-msg {
     background-color: $adult-message-color;
+}
+
+.spinner {
+    height: 100vh;
+    width: 100vw;
+    z-index: 100;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (min-width: 950px) {

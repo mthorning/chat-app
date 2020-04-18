@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "assets/main.scss";
 import { UserContext, SocketContext } from "contexts";
-import { MsgInput, Conversation, SessionBar, Online } from "components";
+import {
+  Spinner,
+  MsgInput,
+  Conversation,
+  SessionBar,
+  Online,
+} from "components";
 import io from "socket.io-client";
 
 const socket = io();
@@ -14,7 +20,7 @@ if ("serviceWorker" in navigator) {
 }
 
 function App() {
-  const [whoami, setWhoami] = useState({});
+  const [whoami, setWhoami] = useState(null);
 
   useEffect(() => {
     fetch("/whoami")
@@ -33,21 +39,25 @@ function App() {
       .catch((error) => console.error(error));
   }, []);
 
+  if (!whoami) return <Spinner />;
+
   return (
-    <UserContext.Provider value={whoami}>
-      <SessionBar />
-      <div className="app-area">
-        <SocketContext.Provider value={socket}>
-          <Online />
-          <div className="chat-area-wrapper">
-            <div className="chat-area">
-              <Conversation />
-              <MsgInput />
+    <div className="wrapper">
+      <UserContext.Provider value={whoami}>
+        <SessionBar />
+        <div className="app-area">
+          <SocketContext.Provider value={socket}>
+            <Online />
+            <div className="chat-area-wrapper">
+              <div className="chat-area">
+                <Conversation />
+                <MsgInput />
+              </div>
             </div>
-          </div>
-        </SocketContext.Provider>
-      </div>
-    </UserContext.Provider>
+          </SocketContext.Provider>
+        </div>
+      </UserContext.Provider>
+    </div>
   );
 }
 
