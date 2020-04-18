@@ -155,6 +155,19 @@ body {
     }
 }
 
+.conversation-component::-webkit-scrollbar {
+  width: 10px;
+}
+ 
+.conversation-component::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+ 
+.conversation-component::-webkit-scrollbar-thumb {
+  background-color: $tools-highlight-color;
+}
+
+
 .msg-input-component {
     border-radius: 0 0 $br $br;
     flex: 1 1;
