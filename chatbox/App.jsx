@@ -15,7 +15,7 @@ if ("serviceWorker" in navigator) {
 
 function App({ whoami }) {
   useEffect(() => {
-    if (whoami) {
+    if (whoami && whoami.id) {
       socket.emit("user connected", {
         timestamp: Date.now(),
         displayName: whoami.displayName,

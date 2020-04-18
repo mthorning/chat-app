@@ -8,10 +8,12 @@ fetch("/whoami")
     return res.json();
   })
   .then((whoami) => {
-    const root = document.getElementById("root");
-    ReactDOM.render(<App whoami={whoami} />, root);
+    if (whoami && whoami.id) {
+      const root = document.getElementById("root");
+      ReactDOM.render(<App whoami={whoami} />, root);
 
-    const spinner = document.querySelector(".spinner");
-    spinner.parentNode.removeChild(spinner);
+      const spinner = document.querySelector(".spinner");
+      spinner.parentNode.removeChild(spinner);
+    }
   })
   .catch((error) => console.error(error));
