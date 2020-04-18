@@ -1,13 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "assets/main.scss";
 import { UserContext, SocketContext } from "contexts";
-import {
-  Spinner,
-  MsgInput,
-  Conversation,
-  SessionBar,
-  Online,
-} from "components";
+import { MsgInput, Conversation, SessionBar, Online } from "components";
 import io from "socket.io-client";
 
 const socket = io();
@@ -19,27 +13,16 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-function App() {
-  const [whoami, setWhoami] = useState(null);
-
+function App({ whoami }) {
   useEffect(() => {
-    fetch("/whoami")
-      .then((res) => {
-        if (res.status === 404) window.location.href = "/login";
-        return res.json();
-      })
-      .then((whoiam) => {
-        setWhoami(whoiam);
-        socket.emit("user connected", {
-          timestamp: Date.now(),
-          displayName: whoiam.displayName,
-          id: whoiam.id,
-        });
-      })
-      .catch((error) => console.error(error));
-  }, []);
-
-  if (!whoami) return <Spinner />;
+    if (whoami) {
+      socket.emit("user connected", {
+        timestamp: Date.now(),
+        displayName: whoami.displayName,
+        id: whoami.id,
+      });
+    }
+  }, [whoami]);
 
   return (
     <div className="wrapper">
