@@ -80,6 +80,12 @@ module.exports = {
       swDest: "sw.js",
       clientsClaim: true,
       skipWaiting: true,
+      runtimeCaching: [
+        {
+          urlPattern: /\.(jpg|gif|png)$/,
+          handler: "CacheFirst",
+        },
+      ],
     }),
     new MiniCssExtractPlugin({
       filename: "style.[contenthash].css",
