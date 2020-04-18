@@ -7,27 +7,30 @@ import io from "socket.io-client";
 const socket = io();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("/sw.js")
-      .then((registration) => {})
-      .catch((registrationError) => {
-        console.log("SW registration failed: ", registrationError);
-      });
+    navigator.serviceWorker.register("/sw.js").catch((registrationError) => {
+      console.log("SW registration failed: ", registrationError);
+    });
   });
 }
 
 function App() {
   const [whoami, setWhoami] = useState({});
 
-  useEffect(async () => {
-    const res = await fetch("/whoami");
-    const whoiam = await res.json();
-    setWhoami(whoiam);
-    socket.emit("user connected", {
-      timestamp: Date.now(),
-      displayName: whoiam.displayName,
-      id: whoiam.id,
-    });
+  useEffect(() => {
+    fetch("/whoami")
+      .then((res) => {
+        if (res.status === 404) window.location.href = "/login";
+        return res.json();
+      })
+      .then((whoiam) => {
+        setWhoami(whoiam);
+        socket.emit("user connected", {
+          timestamp: Date.now(),
+          displayName: whoiam.displayName,
+          id: whoiam.id,
+        });
+      })
+      .catch((error) => console.error(error));
   }, []);
 
   return (

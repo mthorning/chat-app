@@ -5,7 +5,7 @@
   "background_color": "#ab47a7",
   "display": "standalone",
   "orientation": "portrait",
-  "start_url": "https://squishychat.thorning.ovh",
+  "start_url": "./index.html",
   "icons": [
     {
       "src": "icons/icon-72x72.png",
@@ -43,8 +43,8 @@
       "type": "image/png"
     },
     {
-      "src": "icons/icon-512x512.png",
-      "sizes": "512x512",
+      "src": "icons/icon-400x400.png",
+      "sizes": "400x400",
       "type": "image/png"
     }
   ]
