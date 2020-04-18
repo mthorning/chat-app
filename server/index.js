@@ -31,6 +31,9 @@ const mongo = require("./mongo/connect")
         genid: (req) => uuid(),
         resave: false,
         store: new mongoStore({ mongooseConnection }),
+        cookie: {
+          maxAge: 28800000,
+        },
       })
     );
 

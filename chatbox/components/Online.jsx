@@ -5,7 +5,7 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 function Online() {
   const { id } = useContext(UserContext);
   const socket = useContext(SocketContext);
-  const [open, setOpen] = useState(window.innerWidth >= 950);
+  const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
@@ -13,7 +13,7 @@ function Online() {
     socket.on("online users", (onlineUsers) => {
       setOnlineUsers(onlineUsers.filter((user) => user._id !== id));
     });
-  }, [id, onlineUsers, setOnlineUsers]);
+  }, []);
 
   useEffect(() => {
     setTimeout(() => setIsOpen(open), 350);
@@ -43,8 +43,3 @@ function Online() {
 
 export default Online;
 
-const styles = {
-  wrapper: {
-    width: "100px",
-  },
-};

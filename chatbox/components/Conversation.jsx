@@ -1,4 +1,9 @@
-import React, { useReducer, useEffect, useContext } from "react";
+import React, {
+  useReducer,
+  useLayoutEffect,
+  useEffect,
+  useContext,
+} from "react";
 import { SocketContext } from "contexts";
 import { Message } from "components";
 
@@ -43,7 +48,7 @@ function Conversation() {
   }, []);
 
   let convoWrapper;
-  useEffect(() => {
+  useLayoutEffect(() => {
     convoWrapper.scrollTop = convoWrapper.scrollHeight;
   });
 

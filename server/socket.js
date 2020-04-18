@@ -61,7 +61,6 @@ module.exports = (io) => (socket) => {
   }
 
   function sendMessageHistory() {
-    console.log("Retrieving message history...");
     MessageModel.find({}, (err, messages) => {
       if (err) console.error(err);
       io.emit("message history", messages);
