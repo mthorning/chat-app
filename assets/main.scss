@@ -1,3 +1,5 @@
+@import '~emoji-mart/css/emoji-mart.css';
+
 $tools-default-color: #e3d5f1;
 $tools-highlight-color: #fa09cf;
 $navbar-color: #ab47a7;
@@ -166,17 +168,24 @@ body {
   background-color: #cd8dc2;
 }
 
+.emoji-mart {
+    box-shadow: 4px 4px 10px;
+    position: absolute;
+}
 
 .msg-input-component {
     border-radius: 0 0 $br $br;
     flex: 1 1;
     padding: 0;
+    display: flex;
+    align-items: center;
+    border-top: 2px dashed $navbar-color;
 
     textarea {
         padding: 15px;
         font-size: 16px;
         font-family: 'Mali', cursive;
-        background-color: rgba(100, 100, 100, 0.1);
+        background-color: rgba(0, 0, 0, 0);
         resize: none;
         margin: auto;
         vertical-align: text-top;
@@ -186,6 +195,12 @@ body {
     }
     textarea:focus {
         outline: none;
+    }
+
+    .emoji-icon {
+        font-size: 45px;
+        color: $navbar-color;
+        cursor: pointer;
     }
 }
 

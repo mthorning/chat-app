@@ -59,7 +59,7 @@ function Conversation() {
   useEffect(() => {
     window.addEventListener("click", onWindowClick);
     return () => window.removeEventListener("click", onWindowClick);
-  });
+  }, []);
 
   return (
     <div className="conversation-component" ref={(el) => (convoWrapper = el)}>
