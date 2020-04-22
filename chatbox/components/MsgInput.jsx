@@ -109,6 +109,7 @@ function MsgInput() {
 
   function addEmoji({ native: emoji }) {
     setMsg((msg) => msg + emoji);
+    setShowEmojis(false);
     textareaRef.current.focus();
   }
 
