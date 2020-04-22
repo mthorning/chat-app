@@ -34,7 +34,6 @@ function EmojiPicker({
       {showEmojis ? (
         <div ref={pickerRef}>
           <Picker
-            autoFocus
             style={{
               bottom: `${topEdge + 10}px`,
               right: `${rightEdge + 10}px`,

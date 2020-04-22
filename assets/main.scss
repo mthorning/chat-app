@@ -171,6 +171,7 @@ body {
 .emoji-mart {
     box-shadow: 4px 4px 10px;
     position: absolute;
+    z-index: 101;
 }
 
 .msg-input-component {
