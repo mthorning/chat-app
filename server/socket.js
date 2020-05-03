@@ -1,5 +1,7 @@
+const path = require("path");
 const UserModel = require("./mongo/models/User");
 const MessageModel = require("./mongo/models/Message");
+const cloudinary = require("cloudinary").v2;
 
 module.exports = (io) => (socket) => {
   let userId;
@@ -22,6 +24,24 @@ module.exports = (io) => (socket) => {
     io.emit("adult message", responsePacket);
   });
 
+  socket.on("upload image", ({ name, file, ...rest }) => {
+    cloudinary.uploader.upload(
+      file,
+      {
+        resource_type: "image",
+        public_id: `squishychat/${path.basename(name)}`,
+        overwrite: true,
+      },
+      function (error, result) {
+        if (error) {
+          console.error("Error uploading image: ", JSON.stringify(error));
+        } else {
+          saveMessage({ ...rest, message: result.secure_url, img: true });
+        }
+      }
+    );
+  });
+
   socket.on("delete message", (id) => {
     deleteMessage(id);
   });
@@ -41,6 +61,7 @@ module.exports = (io) => (socket) => {
   }
 
   function saveMessage(packet) {
+    console.log("saving message", packet);
     MessageModel.create(packet, (err, message) => {
       if (err) {
         console.error(err);

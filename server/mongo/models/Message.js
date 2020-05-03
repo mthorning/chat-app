@@ -6,6 +6,7 @@ messageSchema = new mongoose.Schema(
     message: String,
     timestamp: Number,
     displayName: String,
+    img: Boolean,
   },
   { capped: { max: 250 } }
 );

@@ -34,7 +34,7 @@ function Conversation() {
 
   useEffect(() => {
     socket.on("chat message", (packet) => {
-      dispatch({ type: "add", payload: packet });
+      dispatch({ type: "add", payload: { ...packet, error: true } });
     });
     socket.on("adult message", (packet) => {
       dispatch({ type: "add", payload: { ...packet, adult: true } });

@@ -1,12 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { get } from "axios";
 import App from "./App";
 
-get("/whoami")
+fetch("/whoami")
   .then((res) => {
     if (res.status === 404) window.location.href = "/login";
-    return res.data;
+    return res.json();
   })
   .then((whoami) => {
     if (whoami && whoami.id) {

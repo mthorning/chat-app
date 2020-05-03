@@ -145,6 +145,12 @@ body {
         overflow-wrap: break-word;
         position: relative;
 
+        img {
+            display: block;
+            max-width: 100%;
+            margin: auto;
+        }
+
         .delete {
             position: absolute;
             top: 0;
@@ -223,6 +229,11 @@ body {
 
 .own-msg {
     background-color: $own-message-color;
+}
+
+.own-msg.error {
+    background-color: red;
+    color: white;
 }
 
 .adult-msg,

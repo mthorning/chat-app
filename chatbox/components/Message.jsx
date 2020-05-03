@@ -11,20 +11,25 @@ const propTypes = {
   id: PropTypes.string.isRequired,
 };
 
+function FormattedMessage({ msgId, message, img }) {
+  return img ? (
+    <img data-id={msgId} src={message} />
+  ) : (
+    <span
+      data-id={msgId}
+      dangerouslySetInnerHTML={{ __html: sanitize(anchorme(message)) }}
+    />
+  );
+}
+
 function Message(props) {
-  const { _id: msgId, message, displayName, id, adult, bin } = props;
+  const { _id: msgId, message, displayName, id, adult, img, bin } = props;
   const [binId, setBinId] = bin;
   const whoiam = useContext(UserContext);
   const socket = useContext(SocketContext);
 
   function deleteMessage() {
     socket.emit("delete message", msgId);
-  }
-
-  function FormattedMessage({ message }) {
-    return (
-      <span dangerouslySetInnerHTML={{ __html: sanitize(anchorme(message)) }} />
-    );
   }
 
   switch (true) {
@@ -40,14 +45,14 @@ function Message(props) {
           {binId && binId === msgId && (
             <MdDelete onClick={deleteMessage} className="delete" />
           )}
-          <FormattedMessage message={message} />
+          <FormattedMessage {...{ msgId, img, message }} />
         </div>
       );
     case whoiam.adult && adult:
       return (
         <div className="message adult-msg">
           <strong>{displayName}: </strong>
-          <FormattedMessage message={message} />
+          <FormattedMessage {...{ msgId, img, message }} />
         </div>
       );
     case !adult:

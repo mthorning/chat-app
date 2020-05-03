@@ -63,7 +63,7 @@ function useMsgInputPosition() {
   return [inputPosition, inputRef];
 }
 
-function FileUpload() {
+function FileUpload({ uploadImage }) {
   const ref = useRef();
 
   function handleFile() {
@@ -72,6 +72,7 @@ function FileUpload() {
 
     reader.addEventListener(
       "load",
+      /*
       function () {
         fetch("/newImage", {
           method: "POST",
@@ -91,6 +92,8 @@ function FileUpload() {
             console.error("Error:", error);
           });
       },
+        */
+      () => uploadImage({ name: file.name, file: reader.result }),
       false
     );
 
@@ -157,8 +160,15 @@ function MsgInput() {
     textareaRef.current.focus();
   }
 
-  function addImage(dataUri) {
-    send("chat message", `<img width="350px" src="${dataUri}" />`);
+  function uploadImage({ file, name }) {
+    const timestamp = Date.now();
+    socket.emit("upload image", {
+      file,
+      name,
+      timestamp,
+      id,
+      displayName,
+    });
   }
 
   return (
@@ -174,7 +184,7 @@ function MsgInput() {
           onChange={changeHandler}
           onKeyPress={inputHandler}
         />
-        <FileUpload addImage={addImage} />
+        <FileUpload uploadImage={uploadImage} />
         <IoMdHappy
           onClick={(e) => {
             e.stopPropagation();
