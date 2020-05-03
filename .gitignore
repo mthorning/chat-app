@@ -4,3 +4,4 @@ dist
 users.json
 build
 dump.rdb
+.env

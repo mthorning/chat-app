@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -9,8 +10,15 @@ const app = express();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const socketFuncs = require("./socket")(io);
+var cloudinary = require("cloudinary").v2;
 
 const env = process.env.PRODUCTION ? "dist" : "dev";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
@@ -27,7 +35,7 @@ const mongo = require("./mongo/connect")
     app.use(
       session({
         saveUninitialized: true,
-        secret: "esmaesqishpants",
+        secret: process.env.SESSION_SECRET,
         genid: (req) => uuid(),
         resave: false,
         store: new mongoStore({ mongooseConnection }),

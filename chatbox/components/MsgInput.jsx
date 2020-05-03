@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-} from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { UserContext, SocketContext } from "contexts";
 import { IoMdHappy } from "react-icons/io";
 import { Picker } from "emoji-mart";
@@ -69,6 +63,53 @@ function useMsgInputPosition() {
   return [inputPosition, inputRef];
 }
 
+function FileUpload() {
+  const ref = useRef();
+
+  function handleFile() {
+    const file = this.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener(
+      "load",
+      function () {
+        fetch("/newImage", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: file.name,
+            file: reader.result,
+          }),
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            console.log("Success:", result);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      },
+      false
+    );
+
+    if (file && /\.(jpe?g|png|gif)$/i.test(file.name)) {
+      reader.readAsDataURL(file);
+    }
+  }
+
+  useEffect(() => {
+    ref.current && ref.current.addEventListener("change", handleFile, false);
+
+    return () =>
+      ref.current &&
+      ref.current.removeEventListener("change", handleFile, false);
+  }, []);
+
+  return <input ref={ref} type="file" />;
+}
+
 function MsgInput() {
   const [msg, setMsg] = useState("");
   const { id, displayName, adult } = useContext(UserContext);
@@ -77,18 +118,22 @@ function MsgInput() {
   const [inputPosition, inputRef] = useMsgInputPosition();
   const [showEmojis, setShowEmojis] = useState(false);
 
+  function send(msgType, message) {
+    const timestamp = Date.now();
+    socket.emit(msgType, {
+      message,
+      timestamp,
+      id,
+      displayName,
+    });
+  }
+
   function inputHandler(e) {
     if (e.which === 13) {
       e.preventDefault();
       const [msgType, message] = newMessage(e.target.value);
-      const timestamp = Date.now();
       if (message.length) {
-        socket.emit(msgType, {
-          message,
-          timestamp,
-          id,
-          displayName,
-        });
+        send(msgType, message);
         setShowEmojis(false);
         setMsg("");
       }
@@ -112,6 +157,10 @@ function MsgInput() {
     textareaRef.current.focus();
   }
 
+  function addImage(dataUri) {
+    send("chat message", `<img width="350px" src="${dataUri}" />`);
+  }
+
   return (
     <>
       <EmojiPicker
@@ -125,6 +174,7 @@ function MsgInput() {
           onChange={changeHandler}
           onKeyPress={inputHandler}
         />
+        <FileUpload addImage={addImage} />
         <IoMdHappy
           onClick={(e) => {
             e.stopPropagation();

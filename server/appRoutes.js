@@ -3,6 +3,7 @@ const env = process.env.PRODUCTION ? "dist" : "dev";
 const path = require("path");
 const UserModel = require("./mongo/models/User");
 const password = require("password-hash-and-salt");
+var cloudinary = require("cloudinary").v2;
 
 console.info("Env is set as", env);
 
@@ -75,6 +76,22 @@ module.exports = (express, app, passport) => {
     updateModel(user.id, updateData)
       .then(() => res.redirect("/"))
       .catch((err) => console.error(err));
+  });
+
+  app.post("/newImage", (req, res, next) => {
+    const { file, name } = req.body;
+    cloudinary.uploader.upload(
+      file,
+      {
+        resource_type: "image",
+        public_id: `squishychat/${name}`,
+        overwrite: true,
+      },
+      function (error, result) {
+        console.log(result, error);
+        if (error) res.status(500).json(error);
+      }
+    );
   });
 };
 
