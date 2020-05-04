@@ -7,8 +7,9 @@ messageSchema = new mongoose.Schema(
     timestamp: Number,
     displayName: String,
     img: Boolean,
+    imgId: String,
   },
-  { capped: { max: 250 } }
+  { capped: { max: 100000 } }
 );
 
 module.exports = mongoose.model("messages", messageSchema);

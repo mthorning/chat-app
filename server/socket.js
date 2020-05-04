@@ -29,14 +29,22 @@ module.exports = (io) => (socket) => {
       file,
       {
         resource_type: "image",
-        public_id: `squishychat/${path.basename(name)}`,
+        tags: ["squishychat"],
+        public_id: `squishychat/${
+          name.substring(0, name.lastIndexOf(".")) || name
+        }`,
         overwrite: true,
       },
       function (error, result) {
         if (error) {
           console.error("Error uploading image: ", JSON.stringify(error));
         } else {
-          saveMessage({ ...rest, message: result.secure_url, img: true });
+          saveMessage({
+            ...rest,
+            message: result.secure_url,
+            img: true,
+            imgId: result.public_id,
+          });
         }
       }
     );
@@ -72,11 +80,16 @@ module.exports = (io) => (socket) => {
   }
 
   function deleteMessage(id) {
-    MessageModel.deleteOne({ _id: id }, (err) => {
+    MessageModel.findOneAndDelete({ _id: id }, (err, message) => {
       if (err) {
         console.error(err);
       } else {
         io.emit("message deleted", id);
+        if (message.img) {
+          cloudinary.api.delete_resources([message.imgId], {}, (err) => {
+            if (err) console.error(err);
+          });
+        }
       }
     });
   }
