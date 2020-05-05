@@ -28,6 +28,7 @@ function EmojiPicker({
       {showEmojis ? (
         <div ref={pickerRef}>
           <Picker
+            native
             style={{
               bottom: `${topEdge + 10}px`,
               right: `${rightEdge + 10}px`,
