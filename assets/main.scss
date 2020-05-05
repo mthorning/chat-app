@@ -204,7 +204,12 @@ body {
         outline: none;
     }
 
-    .emoji-icon {
+    .tools {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .msg-input-icon {
         font-size: 45px;
         color: $navbar-color;
         cursor: pointer;

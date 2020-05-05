@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { UserContext, SocketContext } from "contexts";
-import { IoMdHappy } from "react-icons/io";
+import { IoIosImage, IoMdHappy } from "react-icons/io";
 import { Picker } from "emoji-mart";
 
 const adultSymbol = "#";
@@ -41,6 +41,43 @@ function EmojiPicker({
   );
 }
 
+function FileUpload({ uploadImage }) {
+  const ref = useRef();
+
+  function handleFile() {
+    const file = this.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener(
+      "load",
+      () => uploadImage({ name: file.name, file: reader.result }),
+      false
+    );
+
+    if (file && /\.(jpe?g|png|gif)$/i.test(file.name)) {
+      reader.readAsDataURL(file);
+    }
+  }
+
+  useEffect(() => {
+    ref.current && ref.current.addEventListener("change", handleFile, false);
+
+    return () =>
+      ref.current &&
+      ref.current.removeEventListener("change", handleFile, false);
+  }, []);
+
+  return (
+    <>
+      <input style={{ display: "none" }} ref={ref} type="file" />
+      <IoIosImage
+        onClick={() => ref.current && ref.current.click()}
+        className="msg-input-icon"
+      />
+    </>
+  );
+}
+
 function useMsgInputPosition() {
   const [inputPosition, setInputPosition] = useState({});
   const inputRef = useRef();
@@ -61,56 +98,6 @@ function useMsgInputPosition() {
   }, []);
 
   return [inputPosition, inputRef];
-}
-
-function FileUpload({ uploadImage }) {
-  const ref = useRef();
-
-  function handleFile() {
-    const file = this.files[0];
-    const reader = new FileReader();
-
-    reader.addEventListener(
-      "load",
-      /*
-      function () {
-        fetch("/newImage", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: file.name,
-            file: reader.result,
-          }),
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            console.log("Success:", result);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      },
-        */
-      () => uploadImage({ name: file.name, file: reader.result }),
-      false
-    );
-
-    if (file && /\.(jpe?g|png|gif)$/i.test(file.name)) {
-      reader.readAsDataURL(file);
-    }
-  }
-
-  useEffect(() => {
-    ref.current && ref.current.addEventListener("change", handleFile, false);
-
-    return () =>
-      ref.current &&
-      ref.current.removeEventListener("change", handleFile, false);
-  }, []);
-
-  return <input ref={ref} type="file" />;
 }
 
 function MsgInput() {
@@ -184,14 +171,16 @@ function MsgInput() {
           onChange={changeHandler}
           onKeyPress={inputHandler}
         />
-        <FileUpload uploadImage={uploadImage} />
-        <IoMdHappy
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowEmojis((show) => !show);
-          }}
-          className="emoji-icon"
-        />
+        <div className="tools">
+          <IoMdHappy
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowEmojis((show) => !show);
+            }}
+            className="msg-input-icon"
+          />
+          <FileUpload uploadImage={uploadImage} />
+        </div>
       </div>
     </>
   );
