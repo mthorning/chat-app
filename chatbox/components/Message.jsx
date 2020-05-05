@@ -59,7 +59,7 @@ function Message(props) {
       return (
         <div className="message sender-msg">
           <strong>{displayName} says </strong>
-          <FormattedMessage message={message} />
+          <FormattedMessage {...{ msgId, img, message }} />
         </div>
       );
     default:
