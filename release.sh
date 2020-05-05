@@ -9,7 +9,7 @@ ENDSSH
 
 echo "creating tarball..."
 tar cvfz ./release-package.tar.gz ./package.json ./docker-compose.yml \
- ./Dockerfile ./server ./build/dist
+ ./Dockerfile ./server ./build/dist ./.env
 
 echo "transferring tarball to server..."
 scp ./release-package.tar.gz $1:~/containers/squishychat \

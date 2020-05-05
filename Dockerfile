@@ -5,5 +5,6 @@ WORKDIR /usr/app
 COPY package.json .
 RUN npm install --production
 
+COPY ./.env ./.env
 COPY ./server ./server
 COPY ./build/dist ./build/dist
